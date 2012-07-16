@@ -1,0 +1,695 @@
+@charset "utf-8";
+
+/*
+ Hive Solutions Openid
+ Copyright (C) 2010 Hive Solutions Lda.
+
+ This file is part of Hive Solutions Openid.
+
+ Hive Solutions Openid is confidential and property of Hive Solutions Lda.,
+ its usage is constrained by the terms of the Hive Solutions
+ Confidential Usage License.
+
+ Hive Solutions Openid should not be distributed under any circumstances,
+ violation of this may imply legal action.
+
+ If you have any questions regarding the terms of this license please
+ refer to <http://www.hive.pt/licenses/>.
+*/
+
+/*
+ __author__    = Marco Sousa <v-msousa@hive.pt> & João Magalhães <joamag@hive.pt>
+ __version__   = 1.0.0
+ __revision__  = $LastChangedRevision$
+ __date__      = $LastChangedDate$
+ __copyright__ = Copyright (c) 2010 Hive Solutions Lda.
+ __license__   = Hive Solutions Confidential Usage License (HSCUL)
+*/
+
+body {
+    background: transparent url(../images/background-texture.png) repeat 0px 0px;
+    font-family: Arial;
+    font-size: 10pt;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+h1 {
+    font-size: 20pt;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+.clear-left {
+    clear: left;
+}
+
+.right {
+    float: right;
+}
+
+.left {
+    float: left;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.title {
+    font-size: 20pt;
+}
+
+.link {
+    cursor: pointer;
+}
+
+.link:hover{
+    text-decoration: underline;
+}
+
+.underline-link {
+    color: #214c8f;
+    cursor: pointer;
+    padding-bottom: 2px;
+}
+
+.underline-link:hover {
+    border-bottom: 2px solid #214c8f;
+}
+
+.gray {
+    color: #919191;
+}
+
+.dark-gray {
+    color: #808080;
+}
+
+.dark-blue {
+    color: #214c8f;
+}
+
+.blue {
+    color: #7a9bce;
+}
+
+.light-blue {
+    color: #90a5c7;
+}
+
+.light-black {
+    color: #444444;
+}
+
+.light-light-black {
+    color: #666666;
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+#header {
+    background: transparent url(../images/header.png) repeat-x 0px 0px;
+    border-bottom: 1px solid #bfbfbf;
+    height: 76px;
+    width: 100%;
+}
+
+#header-shadow {
+    background: transparent url(../images/header-shadow.png) repeat-x 0px 0px;
+    height: 18px;
+    width: 100%;
+}
+
+#logo {
+    background: transparent url(../images/hive_logo.png) repeat-x 0px 0px;
+    float: left;
+    height: 60px;
+    margin-top: 8px;
+    width: 150px;
+}
+
+#header-wrapper {
+    margin: 0px auto;
+    width: 960px;
+}
+
+.header-tools {
+    float: right;
+    font-weight: normal;
+    line-height: 16px;
+    margin-top: 13px;
+}
+
+.header-tools-no-login {
+    float: right;
+    font-weight: normal;
+    margin-top: 15px;
+}
+
+.header-links {
+    margin-top: -10px;
+}
+
+.user-signed-status {
+    text-align: right;
+}
+
+.user-signed-status-name {
+    font-weight: bold;
+}
+
+.error {
+    margin: 50px 0px 50px 0px;
+    text-align: center;
+}
+
+.error .title {
+    color: #214c8f;
+    font-size: 18pt;
+}
+
+.error .message {
+    color: #7a9bce;
+    font-size: 16pt;
+}
+
+.button {
+    cursor: pointer;
+    text-align: center;
+    user-select: none;
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+}
+
+.button-dark-blue-small {
+    background: transparent url(../images/button-dark-blue-small-sprite.png) no-repeat 0px 0px;
+    color: #ffffff;
+    height: 28px;
+    width: 80px;
+}
+
+.button-dark-blue-small:hover {
+    background-position: 0px -28px;
+}
+
+.button-dark-blue-small:active {
+    background-position: 0px -56px;
+}
+
+.button-dark-blue-small-text {
+    display: block;
+    padding-top: 5px;
+    text-shadow: 0px 1px 1px #164a73;
+}
+
+.button-dark-green {
+    background: url(../images/button-dark-green-sprite.png) no-repeat transparent 0px 0px;
+    color: #ffffff;
+    height: 40px;
+    width: 164px;
+}
+
+.button-dark-green:hover {
+    background-position: 0px -40px;
+}
+
+.button-dark-green:active {
+    background-position: 0px -80px;
+}
+
+.button-dark-green-text {
+    display: block;
+    font-size: 12pt;
+    padding-top: 10px;
+    text-shadow: 0 1px 1px #295c00;
+}
+
+.button-dark-green-small {
+    background: transparent url(../images/button-dark-green-small-sprite.png) no-repeat 0px 0px;
+    color: #ffffff;
+    height: 28px;
+    width: 80px;
+}
+
+.button-dark-green-small:hover {
+    background-position: 0px -28px;
+}
+
+.button-dark-green-small:active {
+    background-position: 0px -56px;
+}
+
+.button-dark-green-small-text {
+    display: block;
+    padding-top: 5px;
+    text-shadow: 0px 1px 1px #164a73;
+}
+
+.button-light-gray {
+    background: transparent url(../images/button-light-gray-sprite.png) no-repeat 0px 0px;
+    color: #444444;
+    height: 40px;
+    width: 169px;
+}
+
+.button-light-gray:hover {
+    background-position: 0px -40px;
+}
+
+.button-light-gray:active {
+    background-position: 0px -80px;
+}
+
+.button-light-gray-text {
+    display: block;
+    font-size: 12pt;
+    padding-top: 10px;
+    text-shadow: 0 1px 1px #ffffff;
+}
+
+.checkbox {
+    background: transparent url(../images/checkbox-sprite.png) no-repeat 0px 0px;
+    height: 16px;
+    width: 16px;
+}
+
+.checkbox:hover {
+    background-position: 0px -16px;
+}
+
+#main-wrapper {
+    margin: 0px auto;
+    width: 960px;
+}
+
+#content {
+    float: left;
+    margin-bottom: 42px;
+    margin-top: 32px;
+}
+
+.user-name {
+    color: #214c8f;
+    font-size: 20pt;
+}
+
+.user-title {
+    border-bottom: 1px solid #90a5c7;
+    margin-bottom: 16px;
+    width: 636px;
+}
+
+.user-position {
+    color: #90a5c7;
+    font-size: 13pt;
+    font-weight: normal;
+    margin-top: -16px;
+}
+
+.user-info-bar-left {
+    float: left;
+    margin-right: 44px;
+    width: 296px;
+}
+
+.user-info-bar-right {
+    float: left;
+    width: 296px;
+}
+
+.user-info-text {
+    font-size: 11pt;
+    font-weight: normal;
+    line-height: 1.5em;
+    margin-top: -12px;
+}
+
+.user-info-title {
+    font-size: 13pt;
+}
+
+#signin-form {
+    margin: 50px auto;
+    width: 300px;
+}
+
+#general-form {
+    border-left: 1px solid #246594;
+    float: left;
+    margin: 50px 0px;
+    padding-left: 80px;
+    width: 679px;
+}
+
+#full-form {
+    border-left: 1px solid #246594;
+    float: left;
+    margin: 50px 0px;
+    padding-left: 80px;
+    width: 660px;
+}
+
+.input {
+    border: 2px solid #90a5c7;
+    border-radius: 4px 4px 4px 4px;
+    -moz-border-radius: 4px 4px 4px 4px;
+    -webkit-border-radius: 4px 4px 4px 4px;
+    display: block;
+    font-family: Arial;
+    font-size: 14pt;
+    font-weight: bold;
+    height: 25px;
+    letter-spacing: 1px;
+    outline: none;
+    padding: 6px 6px 6px 6px;
+    width: 300px;
+}
+
+.input:hover {;
+    border: 2px solid #214c8f;
+}
+
+.label {
+    font-size: 12pt;
+}
+
+.checkbox-signin {
+    float: left;
+    margin-right: 10px;
+    margin-top: 1px;
+}
+
+.image.image-logo {
+    height: 180px;
+    width: 340px;
+}
+
+#user-search-form {
+    margin: 50px auto;
+    text-align: center;
+    width: 500px;
+}
+
+#user-search-form-image {
+    display: block;
+    margin: 0px auto 0px auto;
+}
+
+.authenticate-agents {
+    font-size: 13pt;
+    line-height: 1.5em;
+}
+
+.back-to-service {
+    font-size: 13pt;
+    font-weight: normal;
+    line-height: 1.5em;
+}
+
+#allow-block {
+    height: 40px;
+    margin: 22px 0px 22px 0px;
+}
+
+.order-up-off {
+    background: transparent url(../images/arrow-up.png) no-repeat 0px 0px;
+    cursor: pointer;
+    display: inline-block;
+    float: left;
+    height: 14px;
+    margin: -1px 0px 0px 2px;
+    width: 14px;
+}
+
+span.order-up-off:hover {
+    background: transparent url(../images/arrow-up-active.png) no-repeat 0px 0px;
+    display: inline-block;
+    float: left;
+    height: 14px;
+    width: 14px;
+}
+
+.order-up-on {
+    background: transparent url(../images/arrow-up-active.png) no-repeat 0px 0px;
+    cursor: pointer;
+    display: inline-block;
+    float: left;
+    height: 14px;
+    margin: -1px 0px 0px 2px;
+    width: 14px;
+}
+
+.order-down-off {
+    background: transparent url(../images/arrow-down.png) no-repeat 0px 0px;
+    cursor: pointer;
+    display: inline-block;
+    float: left;
+    height: 14px;
+    width: 14px;
+}
+
+span.order-down-off:hover {
+    background: transparent url(../images/arrow-down-active.png) no-repeat 0px 0px;
+    cursor: pointer;
+    display: inline-block;
+    float: left;
+    height: 14px;
+    width: 14px;
+}
+
+.order-down-on {
+    background: transparent url(../images/arrow-down-active.png) no-repeat 0px 0px;
+    cursor: pointer;
+    display: inline-block;
+    float: left;
+    height: 14px;
+    width: 14px;
+}
+
+.general-text {
+    font-size: 13pt;
+    font-weight: normal;
+}
+
+.checkbox-approve {
+    float: left;
+    margin-right: 10px;
+    margin-top: 1px;
+}
+
+.checkbox-allow {
+    float: left;
+    margin-right: 10px;
+    margin-top: 6px;
+}
+
+.full-list {
+    float: left;
+    font-size: 13pt;
+    font-weight: normal;
+    list-style: none;
+    margin-top: -10px;
+    padding: 0px;
+    width: 660px;
+}
+
+.full-list-colorline {
+    background-color: #ffffff;
+    padding: 8px;
+}
+
+.full-list-line {
+    padding: 8px;
+}
+
+.full-list-site {
+    width: 210px;
+}
+
+.full-list-approve {
+    width: 122px;
+}
+
+.full-list-signin {
+    width: 194px;
+}
+
+.full-list-approvals {
+    width: 108px;
+}
+
+.full-list-cell {
+    width: 190px;
+}
+
+.full-list li span {
+    display: inline-block;
+}
+
+.full-list-paginator {
+    float: right;
+}
+
+.activity-type {
+    padding-top: 25px;
+}
+
+#user-sidebar {
+    float: left;
+    margin-top: 50px;
+    width: 324px;
+}
+
+#sidebar {
+    float: left;
+    height: auto;
+    margin-top: 50px;
+    width: 200px;
+}
+
+#user-pictures {
+    text-align: center;
+}
+
+#user-operations {
+    margin-top: 12px;
+    text-align: center;
+}
+
+#user-operations ul {
+    list-style: none;
+    padding: 0px 0px 0px 0px;
+}
+
+#user-operations li {
+    line-height: 24px;
+}
+
+#user-description {
+    color: #214c8f;
+    font-family: Georgia, serif;
+    font-size: 11pt;
+    font-style: italic;
+    font-weight: normal;
+    line-height: 1.5em;
+    margin: 28px auto 28px auto;
+    text-align: center;
+    width: 248px;
+}
+
+#user-avatar {
+    box-shadow: 2px 2px 4px #cccccc;
+    -moz-box-shadow: 2px 2px 4px #cccccc;
+    -webkit-box-shadow: 2px 2px 4px #cccccc;
+    height: 200px;
+    width: 200px;
+}
+
+.menu {
+    cursor: pointer;
+    font-size: 9pt;
+    line-height: 22px;
+    list-style: none;
+    padding: 0px 10px;
+    text-transform: uppercase;
+}
+
+.menu-title {
+    border-bottom: 1px solid #90a5c7;
+    margin: 28px 0px 8px 0px;
+    padding-bottom: 6px;
+    text-transform: uppercase;
+}
+
+.sub-menu {
+    font-weight: normal;
+    padding-left: 10px;
+}
+
+.sub-menu-close {
+    background: transparent url(../images/minus.png) no-repeat scroll 0px 0px;
+    cursor: pointer;
+    display: inline-block;
+    float: left;
+    height: 7px;
+    margin: 4px 0px 0px -14px;
+    width: 7px;
+}
+
+.sub-menu-open {
+    background: transparent url(../images/plus.png) no-repeat scroll 0px 0px;
+    cursor: pointer;
+    display: inline-block;
+    float: left;
+    height: 7px;
+    margin: 4px 0px 0px -14px;
+    width: 7px;
+}
+
+li.sub-menu:hover {
+    color: #fcb82f;
+}
+
+.sub-menu-active {
+    color: #fcb82f;
+    font-weight: normal;
+    padding-left: 10px;
+}
+
+#footer {
+    border-top: 1px solid #7794a5;
+    clear: both;
+    display: block;
+    margin: 0px auto;
+    width: 960px;
+}
+
+.footer-text {
+    float: right;
+    font-weight: normal;
+}
+
+.button-login {
+    float: right;
+    margin-left: 16px;
+    margin-top: 30px;
+}
+
+.button-logout {
+    float: right;
+    margin-left: 16px;
+    margin-top: 30px;
+}
+
+.button-user-search {
+    float: left;
+    margin-left: 14px;
+}
+
+.button-signin {
+    margin: 24px auto 24px auto;
+}
+
+.input-user-search {
+    float: left;
+}
+
+.input-signin {
+    margin: 8px 0px 14px 0px;
+}
+
+.user-search {
+    height: 40px;
+    margin-top: 26px;
+}
