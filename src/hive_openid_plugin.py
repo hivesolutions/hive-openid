@@ -34,10 +34,10 @@ __copyright__ = "Copyright (c) 2010 Hive Solutions Lda."
 __license__ = "Hive Solutions Confidential Usage License (HSCUL)"
 """ The license for the module """
 
-import colony.base.plugin_system
+import colony.base.system
 import colony.base.decorators
 
-class HiveOpenidPlugin(colony.base.plugin_system.Plugin):
+class HiveOpenidPlugin(colony.base.system.Plugin):
     """
     The main class for the Hive Openid Main plugin.
     """
@@ -47,18 +47,18 @@ class HiveOpenidPlugin(colony.base.plugin_system.Plugin):
     description = "The plugin that offers the hive openid provider"
     version = "1.0.0"
     author = "Hive Solutions Lda. <development@hive.pt>"
-    loading_type = colony.base.plugin_system.EAGER_LOADING_TYPE
+    loading_type = colony.base.system.EAGER_LOADING_TYPE
     platforms = [
-        colony.base.plugin_system.CPYTHON_ENVIRONMENT
+        colony.base.system.CPYTHON_ENVIRONMENT
     ]
     capabilities = [
         "web.mvc_service"
     ]
     dependencies = [
-        colony.base.plugin_system.PluginDependency("pt.hive.colony.plugins.mvc.utils", "1.x.x"),
-        colony.base.plugin_system.PluginDependency("pt.hive.colony.plugins.api.openid", "1.x.x"),
-        colony.base.plugin_system.PluginDependency("pt.hive.colony.plugins.authentication", "1.x.x"),
-        colony.base.plugin_system.PluginDependency("pt.hive.colony.plugins.information.user", "1.x.x")
+        colony.base.system.PluginDependency("pt.hive.colony.plugins.mvc.utils", "1.x.x"),
+        colony.base.system.PluginDependency("pt.hive.colony.plugins.api.openid", "1.x.x"),
+        colony.base.system.PluginDependency("pt.hive.colony.plugins.authentication", "1.x.x"),
+        colony.base.system.PluginDependency("pt.hive.colony.plugins.information.user", "1.x.x")
     ]
     main_modules = [
         "hive_openid.exceptions",
@@ -81,29 +81,29 @@ class HiveOpenidPlugin(colony.base.plugin_system.Plugin):
     """ The information user plugin """
 
     def load_plugin(self):
-        colony.base.plugin_system.Plugin.load_plugin(self)
+        colony.base.system.Plugin.load_plugin(self)
         import hive_openid.system
         self.hive_openid = hive_openid.system.HiveOpenid(self)
 
     def end_load_plugin(self):
-        colony.base.plugin_system.Plugin.end_load_plugin(self)
+        colony.base.system.Plugin.end_load_plugin(self)
         self.hive_openid.load_components()
 
     def unload_plugin(self):
-        colony.base.plugin_system.Plugin.unload_plugin(self)
+        colony.base.system.Plugin.unload_plugin(self)
         self.hive_openid.unload_components()
 
     @colony.base.decorators.inject_dependencies
     def dependency_injected(self, plugin):
-        colony.base.plugin_system.Plugin.dependency_injected(self, plugin)
+        colony.base.system.Plugin.dependency_injected(self, plugin)
 
     @colony.base.decorators.set_configuration_property
     def set_configuration_property(self, property_name, property):
-        colony.base.plugin_system.Plugin.set_configuration_property(self, property_name, property)
+        colony.base.system.Plugin.set_configuration_property(self, property_name, property)
 
     @colony.base.decorators.unset_configuration_property
     def unset_configuration_property(self, property_name):
-        colony.base.plugin_system.Plugin.unset_configuration_property(self, property_name)
+        colony.base.system.Plugin.unset_configuration_property(self, property_name)
 
     def get_patterns(self):
         """
