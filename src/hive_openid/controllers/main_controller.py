@@ -101,7 +101,6 @@ OPENID_SERVER_VALUE = "openid_server"
 OPENID_USER_BASE_VALUE = "openid_user_base"
 """ The openid base value """
 
-# runs the external imports
 mvc_utils = colony.libs.import_util.__import__("mvc_utils")
 
 class MainController:

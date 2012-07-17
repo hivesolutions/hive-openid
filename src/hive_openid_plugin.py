@@ -69,7 +69,7 @@ class HiveOpenidPlugin(colony.base.system.Plugin):
     """ The hive openid """
 
     mvc_utils_plugin = None
-    """ The web mvc utils plugin """
+    """ The mvc utils plugin """
 
     api_openid_plugin = None
     """ The api openid plugin """
