@@ -114,8 +114,9 @@ class MainController:
     hive_openid = None
     """ The hive openid """
 
-    association_handle_openid_remote_server_map = {}
-    """ The map associating the association handle with the openid remote server """
+    association_handle_openid_server_map = {}
+    """ The map associating the association handle
+    with the openid server """
 
     def __init__(self, hive_openid_plugin, hive_openid):
         """
@@ -130,7 +131,7 @@ class MainController:
         self.hive_openid_plugin = hive_openid_plugin
         self.hive_openid = hive_openid
 
-        self.association_handle_openid_remote_server_map = {}
+        self.association_handle_openid_server_map = {}
 
     @mvc_utils.serialize_exceptions("all")
     def handle_hive_index(self, rest_request, parameters = {}):
@@ -365,13 +366,13 @@ class MainController:
             # unsets the login attribute in the session
             self.set_session_attribute(rest_request, "login", False, NAMESPACE_NAME)
 
-        # retrieves the openid remote server from the session attribute
-        openid_remote_server = self.get_session_attribute(rest_request, "openid_remote_server", NAMESPACE_NAME)
+        # retrieves the openid server from the session attribute
+        openid_server = self.get_session_attribute(rest_request, "openid_server", NAMESPACE_NAME)
 
         # in case there is an openid validation pending
-        if openid_remote_server:
+        if openid_server:
             # retrieves the openid structure
-            openid_structure = openid_remote_server.get_openid_structure()
+            openid_structure = openid_server.get_openid_structure()
 
             # retrieves the username from the
             username = openid_structure.get_username_claimed_id()
@@ -386,7 +387,7 @@ class MainController:
                 raise hive_openid.exceptions.UserInformationError("invalid username for openid claimed id")
 
             # processes the request in the server
-            openid_remote_server.openid_request()
+            openid_server.openid_request()
 
         # redirects to the redirect page
         self.redirect_base_path(rest_request, "redirect")
@@ -427,13 +428,13 @@ class MainController:
             # redirects to the signin page
             self.redirect_base_path(rest_request, "signin")
 
-        # retrieves the openid remote server from the session attribute
-        openid_remote_server = self.get_session_attribute(rest_request, "openid_remote_server", NAMESPACE_NAME)
+        # retrieves the openid server from the session attribute
+        openid_server = self.get_session_attribute(rest_request, "openid_server", NAMESPACE_NAME)
 
-        # in case the openid remote server is defined
-        if openid_remote_server:
-            # retrieves the return url from the openid remote server
-            return_url = openid_remote_server.get_return_url()
+        # in case the openid server is defined
+        if openid_server:
+            # retrieves the return url from the openid server
+            return_url = openid_server.get_return_url()
 
             # redirects to the return url page
             self.redirect_base_path(rest_request, return_url, quote = False)
@@ -441,8 +442,8 @@ class MainController:
             # redirects to the index page
             self.redirect_base_path(rest_request, "index")
 
-        # unsets the openid remote server as session attribute
-        self.unset_session_attribute(rest_request, "openid_remote_server", NAMESPACE_NAME)
+        # unsets the openid server as session attribute
+        self.unset_session_attribute(rest_request, "openid_server", NAMESPACE_NAME)
 
     def process_login(self, rest_request, user_data):
         # retrieves the main authentication plugin
@@ -512,8 +513,8 @@ class MainController:
         # retrieves the api openid plugin
         api_openid_plugin = self.hive_openid_plugin.api_openid_plugin
 
-        # creates the openid remote server
-        openid_remote_server = api_openid_plugin.create_remote_server({})
+        # creates the openid server
+        openid_server = api_openid_plugin.create_server({})
 
         # retrieves the provider url
         provider_url = self._get_provider_url(rest_request)
@@ -528,24 +529,24 @@ class MainController:
         consumer_public = openid_data.get("dh_consumer_public", None)
 
         # generates the openid structure
-        openid_remote_server.generate_openid_structure(provider_url, association_type, session_type, prime_value, base_value, consumer_public)
+        openid_server.generate_openid_structure(provider_url, association_type, session_type, prime_value, base_value, consumer_public)
 
         # associates the server and the provider, retrieving the
         # openid structure
-        openid_structure = openid_remote_server.openid_associate()
+        openid_structure = openid_server.openid_associate()
 
         # retrieves the openid association handle
         openid_association_handle = openid_structure.get_association_handle()
 
         # retrieves the encoded response parameters
-        encoded_response_parameters = openid_remote_server.get_encoded_response_parameters()
+        encoded_response_parameters = openid_server.get_encoded_response_parameters()
 
         # sets the request contents
         self.set_contents(rest_request, encoded_response_parameters, "text/plain")
 
-        # sets the openid remote server in the association handle
-        # openid remote server map for later retrieval
-        self.association_handle_openid_remote_server_map[openid_association_handle] = openid_remote_server
+        # sets the openid server in the association handle
+        # openid server map for later retrieval
+        self.association_handle_openid_server_map[openid_association_handle] = openid_server
 
         # returns true
         return True
@@ -569,8 +570,8 @@ class MainController:
         invalidate_handle = None
 
         # in case the association handle does not exist in the association
-        # handle openid remote server map
-        if not association_handle in self.association_handle_openid_remote_server_map:
+        # handle openid server map
+        if not association_handle in self.association_handle_openid_server_map:
             # invalidates the association handle, the communication is converted
             # into stateless mode
             invalidate_handle = association_handle
@@ -578,36 +579,36 @@ class MainController:
 
         # in case the association handle is defined
         if association_handle:
-            # retrieves the openid remote server for the association handle
-            openid_remote_server = self.association_handle_openid_remote_server_map[association_handle]
+            # retrieves the openid server for the association handle
+            openid_server = self.association_handle_openid_server_map[association_handle]
         # otherwise a new openid server should be created
         # for the stateless mode
         else:
             # retrieves the api openid plugin
             api_openid_plugin = self.hive_openid_plugin.api_openid_plugin
 
-            # creates the openid remote server
-            openid_remote_server = api_openid_plugin.create_remote_server({})
+            # creates the openid server
+            openid_server = api_openid_plugin.create_server({})
 
             # retrieves the provider url
             provider_url = self._get_provider_url(rest_request)
 
             # generates the openid structure
-            openid_remote_server.generate_openid_structure(provider_url)
+            openid_server.generate_openid_structure(provider_url)
 
             # associates the server and the provider, retrieving the
             # openid structure
-            openid_structure = openid_remote_server.openid_associate()
+            openid_structure = openid_server.openid_associate()
 
             # retrieves the openid association handle
             openid_association_handle = openid_structure.get_association_handle()
 
-            # sets the openid remote server in the association handle
-            # openid remote server map for later retrieval
-            self.association_handle_openid_remote_server_map[openid_association_handle] = openid_remote_server
+            # sets the openid server in the association handle
+            # openid server map for later retrieval
+            self.association_handle_openid_server_map[openid_association_handle] = openid_server
 
         # retrieves the openid structure
-        openid_structure = openid_remote_server.get_openid_structure()
+        openid_structure = openid_server.get_openid_structure()
 
         # sets the structure attributes
         openid_structure.set_claimed_id(claimed_id)
@@ -617,7 +618,7 @@ class MainController:
         openid_structure.set_invalidate_handle(invalidate_handle)
 
         # sets the openid structure in the session
-        self.set_session_attribute(rest_request, "openid_remote_server", openid_remote_server, NAMESPACE_NAME)
+        self.set_session_attribute(rest_request, "openid_server", openid_server, NAMESPACE_NAME)
 
         # retrieves the username from the
         username = openid_structure.get_username_claimed_id()
@@ -626,7 +627,7 @@ class MainController:
         # and the username is valid
         if login and username == user_information_username:
             # processes the request in the server
-            openid_remote_server.openid_request()
+            openid_server.openid_request()
 
             # redirects to the redirect page
             self.redirect_base_path(rest_request, "redirect")
@@ -657,18 +658,18 @@ class MainController:
         signed = openid_data["signed"]
         signature = openid_data["sig"]
 
-        # retrieves the openid remote server for the association handle
-        openid_remote_server = self.association_handle_openid_remote_server_map[association_handle]
+        # retrieves the openid server for the association handle
+        openid_server = self.association_handle_openid_server_map[association_handle]
 
         # retrieves the openid structure
-        openid_structure = openid_remote_server.get_openid_structure()
+        openid_structure = openid_server.get_openid_structure()
 
         # retrieves the openid attributes
         association_type = openid_structure.get_association_type()
         session_type = openid_structure.get_session_type()
 
         # creates the openid return structure
-        return_openid_structure = openid_remote_server.generate_openid_structure(provider_url, association_type, session_type, set_structure = False)
+        return_openid_structure = openid_server.generate_openid_structure(provider_url, association_type, session_type, set_structure = False)
 
         # sets some of the items of the openid structure
         return_openid_structure.set_ns(ns)
@@ -680,10 +681,10 @@ class MainController:
         return_openid_structure.set_signature(signature)
 
         # checks the openid authentication
-        openid_remote_server.openid_check_authentication(return_openid_structure)
+        openid_server.openid_check_authentication(return_openid_structure)
 
         # retrieves the encoded check authentication parameters
-        encoded_check_authentication_parameters = openid_remote_server.get_encoded_check_authentication_parameters()
+        encoded_check_authentication_parameters = openid_server.get_encoded_check_authentication_parameters()
 
         # sets the request contents
         self.set_contents(rest_request, encoded_check_authentication_parameters, "text/plain")
