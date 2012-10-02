@@ -102,66 +102,54 @@ OPENID_USER_BASE_VALUE = "openid_user_base"
 """ The openid base value """
 
 mvc_utils = colony.libs.import_util.__import__("mvc_utils")
+controllers = colony.libs.import_util.__import__("controllers")
 
-class MainController:
+class MainController(controllers.Controller):
     """
-    The hive openid controller.
+    The main controller.
     """
-
-    hive_openid_plugin = None
-    """ The hive openid plugin """
-
-    hive_openid = None
-    """ The hive openid """
 
     association_handle_openid_server_map = {}
     """ The map associating the association handle
     with the openid server """
 
-    def __init__(self, hive_openid_plugin, hive_openid):
-        """
-        Constructor of the class.
-
-        @type hive_openid_plugin: HiveOpenidPlugin
-        @param hive_openid_plugin: The hive openid plugin.
-        @type hive_openid: HiveOpenid
-        @param hive_openid: The hive openid.
-        """
-
-        self.hive_openid_plugin = hive_openid_plugin
-        self.hive_openid = hive_openid
-
+    def __init__(self, plugin, system):
+        controllers.Controller.__init__(plugin, system)
         self.association_handle_openid_server_map = {}
 
     @mvc_utils.serialize_exceptions("all")
-    def handle_hive_index(self, rest_request, parameters = {}):
+    def handle_index(self, rest_request, parameters = {}):
         """
-        Handles the given hive index rest request.
+        Handles the given index rest request.
 
         @type rest_request: RestRequest
-        @param rest_request: The hive index rest request to be handled.
+        @param rest_request: The index rest request to be handled.
         @type parameters: Dictionary
         @param parameters: The handler parameters.
         """
 
-        # processes the contents of the template file assigning the appropriate values to it
-        template_file = self.retrieve_template_file("general.html.tpl", partial_page = "index_contents.html.tpl")
+        # processes the contents of the template file assigning the
+        # appropriate values to it
+        template_file = self.retrieve_template_file(
+            "general.html.tpl",
+            partial_page = "index_contents.html.tpl"
+        )
         self._assign_base(rest_request, template_file)
         self.process_set_contents(rest_request, template_file)
 
     @mvc_utils.serialize_exceptions("all")
-    def handle_hive_user(self, rest_request, parameters = {}):
+    def handle_user(self, rest_request, parameters = {}):
         """
-        Handles the given hive user rest request.
+        Handles the given user rest request.
 
         @type rest_request: RestRequest
-        @param rest_request: The hive user rest request to be handled.
+        @param rest_request: The user rest request to be handled.
         @type parameters: Dictionary
         @param parameters: The handler parameters.
         """
 
         # retrieves the information user plugin
-        information_user_plugin = self.hive_openid_plugin.information_user_plugin
+        information_user_plugin = self.plugin.information_user_plugin
 
         # retrieves the openid user pattern
         openid_user = self.get_pattern(parameters, OPENID_USER_VALUE)
@@ -181,26 +169,30 @@ class MainController:
         # sets the xrds header value
         rest_request.set_header(X_RDS_LOCATION_VALUE, openid_xrds)
 
-        # processes the contents of the template file assigning the appropriate values to it
-        template_file = self.retrieve_template_file("general.html.tpl", partial_page = "user_contents.html.tpl")
+        # processes the contents of the template file assigning the
+        # appropriate values to it
+        template_file = self.retrieve_template_file(
+            "general.html.tpl",
+            partial_page = "user_contents.html.tpl"
+        )
         template_file.assign(OPENID_USER_VALUE, openid_user)
         template_file.assign(OPENID_USER_INFORMATION_VALUE, openid_user_information)
         self._assign_base(rest_request, template_file)
         self.process_set_contents(rest_request, template_file)
 
     @mvc_utils.serialize_exceptions("all")
-    def handle_hive_user_vcard(self, rest_request, parameters = {}):
+    def handle_user_vcard(self, rest_request, parameters = {}):
         """
-        Handles the given hive user vcard rest request.
+        Handles the given user vcard rest request.
 
         @type rest_request: RestRequest
-        @param rest_request: The hive user vcard rest request to be handled.
+        @param rest_request: The user vcard rest request to be handled.
         @type parameters: Dictionary
         @param parameters: The handler parameters.
         """
 
         # retrieves the information user plugin
-        information_user_plugin = self.hive_openid_plugin.information_user_plugin
+        information_user_plugin = self.plugin.information_user_plugin
 
         # retrieves the openid user pattern
         openid_user = self.get_pattern(parameters, OPENID_USER_VALUE)
@@ -209,7 +201,8 @@ class MainController:
         # using the openid user
         openid_user_information = information_user_plugin.get_user_information_user_key(openid_user)
 
-        # processes the contents of the template file assigning the appropriate values to it
+        # processes the contents of the template file assigning the
+        # appropriate values to it
         template_file = self.retrieve_template_file("vcard.vcf.tpl")
         template_file.assign(OPENID_USER_VALUE, openid_user)
         template_file.assign(OPENID_USER_INFORMATION_VALUE, openid_user_information)
@@ -217,60 +210,72 @@ class MainController:
         self.process_set_contents(rest_request, template_file, content_type = "text/x-vcard")
 
     @mvc_utils.serialize_exceptions("all")
-    def handle_hive_signin(self, rest_request, parameters = {}):
+    def handle_signin(self, rest_request, parameters = {}):
         """
-        Handles the given hive signin request.
+        Handles the given signin request.
 
         @type rest_request: RestRequest
-        @param rest_request: The hive signin rest request to be handled.
+        @param rest_request: The signin rest request to be handled.
         @type parameters: Dictionary
         @param parameters: The handler parameters.
         """
 
-        # processes the contents of the template file assigning the appropriate values to it
-        template_file = self.retrieve_template_file("general.html.tpl", partial_page = "signin_contents.html.tpl")
+        # processes the contents of the template file assigning the
+        # appropriate values to it
+        template_file = self.retrieve_template_file(
+            "general.html.tpl",
+             partial_page = "signin_contents.html.tpl"
+        )
         self._assign_base(rest_request, template_file)
         self.process_set_contents(rest_request, template_file)
 
     @mvc_utils.serialize_exceptions("all")
-    def handle_hive_allow(self, rest_request, parameters = {}):
+    def handle_allow(self, rest_request, parameters = {}):
         """
-        Handles the given hive allow request.
+        Handles the given allow request.
 
         @type rest_request: RestRequest
-        @param rest_request: The hive allow rest request to be handled.
+        @param rest_request: The allow rest request to be handled.
         @type parameters: Dictionary
         @param parameters: The handler parameters.
         """
 
-        # processes the contents of the template file assigning the appropriate values to it
-        template_file = self.retrieve_template_file("general.html.tpl", partial_page = "allow_contents.html.tpl")
+        # processes the contents of the template file assigning the
+        # appropriate values to it
+        template_file = self.retrieve_template_file(
+            "general.html.tpl",
+            partial_page = "allow_contents.html.tpl"
+        )
         self._assign_base(rest_request, template_file)
         self.process_set_contents(rest_request, template_file)
 
     @mvc_utils.serialize_exceptions("all")
-    def handle_hive_approve(self, rest_request, parameters = {}):
+    def handle_approve(self, rest_request, parameters = {}):
         """
-        Handles the given hive approve request.
+        Handles the given approve request.
 
         @type rest_request: RestRequest
-        @param rest_request: The hive approve rest request to be handled.
+        @param rest_request: The approve rest request to be handled.
         @type parameters: Dictionary
         @param parameters: The handler parameters.
         """
 
-        # processes the contents of the template file assigning the appropriate values to it
-        template_file = self.retrieve_template_file("general.html.tpl", partial_page = "approve_contents.html.tpl")
+        # processes the contents of the template file assigning the
+        # appropriate values to it
+        template_file = self.retrieve_template_file(
+            "general.html.tpl",
+            partial_page = "approve_contents.html.tpl"
+        )
         self._assign_base(rest_request, template_file)
         self.process_set_contents(rest_request, template_file)
 
     @mvc_utils.serialize_exceptions("all")
-    def handle_hive_server(self, rest_request, parameters = {}):
+    def handle_server(self, rest_request, parameters = {}):
         """
-        Handles the given hive server rest request.
+        Handles the given server rest request.
 
         @type rest_request: RestRequest
-        @param rest_request: The hive server rest request to be handled.
+        @param rest_request: The server rest request to be handled.
         @type parameters: Dictionary
         @param parameters: The handler parameters.
         """
@@ -285,7 +290,7 @@ class MainController:
         openid_mode = openid_data.get(MODE_VALUE, INVALID_VALUE)
 
         # prints a debug message
-        self.hive_openid_plugin.debug("Receiving request '%s' from client" % openid_mode)
+        self.plugin.debug("Receiving request '%s' from client" % openid_mode)
 
         # in case it's is a post request (associate)
         if openid_mode == ASSOCIATE_VALUE:
@@ -302,12 +307,12 @@ class MainController:
             raise hive_openid.exceptions.InvalidMode(openid_mode)
 
     @mvc_utils.serialize_exceptions("all")
-    def handle_hive_xrds(self, rest_request, parameters = {}):
+    def handle_xrds(self, rest_request, parameters = {}):
         """
-        Handles the given hive xrds rest request.
+        Handles the given xrds rest request.
 
         @type rest_request: RestRequest
-        @param rest_request: The hive xrds rest request to be handled.
+        @param rest_request: The xrds rest request to be handled.
         @type parameters: Dictionary
         @param parameters: The handler parameters.
         """
@@ -338,12 +343,12 @@ class MainController:
         self.set_contents(rest_request, processed_template_file, "application/xrds+xml")
 
     @mvc_utils.serialize_exceptions("all")
-    def handle_hive_login(self, rest_request, parameters = {}):
+    def handle_login(self, rest_request, parameters = {}):
         """
-        Handles the given hive login request.
+        Handles the given login request.
 
         @type rest_request: RestRequest
-        @param rest_request: The hive login rest request to be handled.
+        @param rest_request: The login rest request to be handled.
         @type parameters: Dictionary
         @param parameters: The handler parameters.
         """
@@ -393,12 +398,12 @@ class MainController:
         self.redirect_base_path(rest_request, "redirect")
 
     @mvc_utils.serialize_exceptions("all")
-    def handle_hive_logout(self, rest_request, parameters = {}):
+    def handle_logout(self, rest_request, parameters = {}):
         """
-        Handles the given hive logout request.
+        Handles the given logout request.
 
         @type rest_request: RestRequest
-        @param rest_request: The hive logout rest request to be handled.
+        @param rest_request: The logout rest request to be handled.
         @type parameters: Dictionary
         @param parameters: The handler parameters.
         """
@@ -410,12 +415,12 @@ class MainController:
         self.redirect_base_path(rest_request, "index")
 
     @mvc_utils.serialize_exceptions("all")
-    def handle_hive_redirect(self, rest_request, parameters = {}):
+    def handle_redirect(self, rest_request, parameters = {}):
         """
-        Handles the given hive redirect request.
+        Handles the given redirect request.
 
         @type rest_request: RestRequest
-        @param rest_request: The hive redirect rest request to be handled.
+        @param rest_request: The redirect rest request to be handled.
         @type parameters: Dictionary
         @param parameters: The handler parameters.
         """
@@ -447,13 +452,13 @@ class MainController:
 
     def process_login(self, rest_request, user_data):
         # retrieves the main authentication plugin
-        authentication_plugin = self.hive_openid_plugin.authentication_plugin
+        authentication_plugin = self.plugin.authentication_plugin
 
         # retrieves the information user plugin
-        information_user_plugin = self.hive_openid_plugin.information_user_plugin
+        information_user_plugin = self.plugin.information_user_plugin
 
         # retrieves the authentication properties map
-        authentication_properties_map = self.hive_openid.authentication_properties_map
+        authentication_properties_map = self.system.authentication_properties_map
 
         # in case the authentication handler property is not defined
         if not AUTHENTICATION_HANDLER_VALUE in authentication_properties_map:
@@ -511,7 +516,7 @@ class MainController:
 
     def process_associate(self, rest_request, openid_data):
         # retrieves the api openid plugin
-        api_openid_plugin = self.hive_openid_plugin.api_openid_plugin
+        api_openid_plugin = self.plugin.api_openid_plugin
 
         # creates the openid server
         openid_server = api_openid_plugin.create_server({})
@@ -585,7 +590,7 @@ class MainController:
         # for the stateless mode
         else:
             # retrieves the api openid plugin
-            api_openid_plugin = self.hive_openid_plugin.api_openid_plugin
+            api_openid_plugin = self.plugin.api_openid_plugin
 
             # creates the openid server
             openid_server = api_openid_plugin.create_server({})

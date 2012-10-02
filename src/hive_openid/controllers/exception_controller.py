@@ -34,35 +34,20 @@ __copyright__ = "Copyright (c) 2010-2012 Hive Solutions Lda."
 __license__ = "Hive Solutions Confidential Usage License (HSCUL)"
 """ The license for the module """
 
+import colony.libs.import_util
+
 EXCEPTION_VALUE = "exception"
 """ The exception value """
 
 MESSAGE_VALUE = "message"
 """ The message value """
 
-class ExceptionController:
+controllers = colony.libs.import_util.__import__("controllers")
+
+class ExceptionController(controllers.Controller):
     """
     The hive open id main exception controller.
     """
-
-    hive_openid_plugin = None
-    """ The hive openid plugin """
-
-    hive_openid = None
-    """ The hive openid """
-
-    def __init__(self, hive_openid_plugin, hive_openid):
-        """
-        Constructor of the class.
-
-        @type hive_openid_plugin: HiveOpenidPlugin
-        @param hive_openid_plugin: The hive open id main plugin.
-        @type hive_openid: HiveOpenid
-        @param hive_openid: The hive open id main.
-        """
-
-        self.hive_openid_plugin = hive_openid_plugin
-        self.hive_openid = hive_openid
 
     def handle_exception(self, rest_request, parameters = {}):
         """
@@ -78,7 +63,11 @@ class ExceptionController:
         exception = parameters.get(EXCEPTION_VALUE)
         exception_message = exception.get(MESSAGE_VALUE)
 
-        # processes the contents of the template file assigning the appropriate values to it
-        template_file = self.retrieve_template_file("general.html.tpl", partial_page = "exception.html.tpl")
+        # processes the contents of the template file assigning the
+        # appropriate values to it
+        template_file = self.retrieve_template_file(
+            "general.html.tpl",
+            partial_page = "exception.html.tpl"
+        )
         template_file.assign("exception_message", exception_message)
         self.process_set_contents(rest_request, template_file, assign_session = True)

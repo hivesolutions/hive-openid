@@ -84,20 +84,20 @@ class HiveOpenid(colony.base.system.System):
         """
 
         return (
-            (r"^hive_openid/?$", self.main_controller.handle_hive_index, "get"),
-            (r"^hive_openid/index$", self.main_controller.handle_hive_index, "get"),
-            (r"^hive_openid/users/(?P<openid_user>[\w-]+)$", self.main_controller.handle_hive_user_vcard, "get", "vcf"),
-            (r"^hive_openid/users/(?P<openid_user>[\w-]+)$", self.main_controller.handle_hive_user, "get"),
-            (r"^hive_openid/signin$", self.main_controller.handle_hive_signin, "get"),
-            (r"^hive_openid/allow$", self.main_controller.handle_hive_allow, "get"),
-            (r"^hive_openid/approve$", self.main_controller.handle_hive_approve, "get"),
-            (r"^hive_openid/server$", self.main_controller.handle_hive_server, ("get", "post")),
-            (r"^hive_openid/xrds$", self.main_controller.handle_hive_xrds, "get"),
-            (r"^hive_openid/login$", self.main_controller.handle_hive_login, "post"),
-            (r"^hive_openid/logout$", self.main_controller.handle_hive_logout, "get"),
-            (r"^hive_openid/redirect$", self.main_controller.handle_hive_redirect, "get"),
-            (r"^hive_openid/(?P<openid_user>[\w-]+)$", self.main_controller.handle_hive_user_vcard, "get", "vcf"),
-            (r"^hive_openid/(?P<openid_user>[\w-]+)$", self.main_controller.handle_hive_user, "get")
+            (r"^hive_openid/?$", self.main_controller.handle_index, "get"),
+            (r"^hive_openid/index$", self.main_controller.handle_index, "get"),
+            (r"^hive_openid/users/(?P<openid_user>[\w-]+)$", self.main_controller.handle_user_vcard, "get", "vcf"),
+            (r"^hive_openid/users/(?P<openid_user>[\w-]+)$", self.main_controller.handle_user, "get"),
+            (r"^hive_openid/signin$", self.main_controller.handle_signin, "get"),
+            (r"^hive_openid/allow$", self.main_controller.handle_allow, "get"),
+            (r"^hive_openid/approve$", self.main_controller.handle_approve, "get"),
+            (r"^hive_openid/server$", self.main_controller.handle_server, ("get", "post")),
+            (r"^hive_openid/xrds$", self.main_controller.handle_xrds, "get"),
+            (r"^hive_openid/login$", self.main_controller.handle_login, "post"),
+            (r"^hive_openid/logout$", self.main_controller.handle_logout, "get"),
+            (r"^hive_openid/redirect$", self.main_controller.handle_redirect, "get"),
+            (r"^hive_openid/(?P<openid_user>[\w-]+)$", self.main_controller.handle_user_vcard, "get", "vcf"),
+            (r"^hive_openid/(?P<openid_user>[\w-]+)$", self.main_controller.handle_user, "get")
         )
 
     def get_communication_patterns(self):
