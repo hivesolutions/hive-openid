@@ -114,7 +114,7 @@ class MainController(controllers.Controller):
     with the openid server """
 
     def __init__(self, plugin, system):
-        controllers.Controller.__init__(plugin, system)
+        controllers.Controller.__init__(self, plugin, system)
         self.association_handle_openid_server_map = {}
 
     @mvc_utils.serialize_exceptions("all")
