@@ -1,0 +1,3 @@
+[submodule "src/hive_openid/resources/extras/libs/jquery"]
+	path = src/hive_openid/resources/extras/libs/jquery
+	url = git@github.com:hivesolutions/jquery.git
