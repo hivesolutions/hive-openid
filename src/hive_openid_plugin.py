@@ -47,7 +47,6 @@ class HiveOpenidPlugin(colony.base.system.Plugin):
     description = "The plugin that offers the hive openid provider"
     version = "1.0.0"
     author = "Hive Solutions Lda. <development@hive.pt>"
-    loading_type = colony.base.system.EAGER_LOADING_TYPE
     platforms = [
         colony.base.system.CPYTHON_ENVIRONMENT
     ]
@@ -58,7 +57,7 @@ class HiveOpenidPlugin(colony.base.system.Plugin):
         colony.base.system.PluginDependency("pt.hive.colony.plugins.mvc.utils", "1.x.x"),
         colony.base.system.PluginDependency("pt.hive.colony.plugins.api.openid", "1.x.x"),
         colony.base.system.PluginDependency("pt.hive.colony.plugins.authentication", "1.x.x"),
-        colony.base.system.PluginDependency("pt.hive.colony.plugins.information.user", "1.x.x")
+        colony.base.system.PluginDependency("pt.hive.colony.plugins.info.user", "1.x.x")
     ]
     main_modules = [
         "hive_openid.exceptions",
@@ -77,8 +76,8 @@ class HiveOpenidPlugin(colony.base.system.Plugin):
     authentication_plugin = None
     """ The main authentication plugin """
 
-    information_user_plugin = None
-    """ The information user plugin """
+    info_user_plugin = None
+    """ The info user plugin """
 
     def load_plugin(self):
         colony.base.system.Plugin.load_plugin(self)
@@ -157,9 +156,9 @@ class HiveOpenidPlugin(colony.base.system.Plugin):
     def set_authentication_plugin(self, authentication_plugin):
         self.authentication_plugin = authentication_plugin
 
-    @colony.base.decorators.plugin_inject("pt.hive.colony.plugins.information.user")
-    def set_information_user_plugin(self, information_user_plugin):
-        self.information_user_plugin = information_user_plugin
+    @colony.base.decorators.plugin_inject("pt.hive.colony.plugins.info.user")
+    def set_info_user_plugin(self, info_user_plugin):
+        self.info_user_plugin = info_user_plugin
 
     @colony.base.decorators.set_configuration_property_method("service_configuration")
     def service_configuration_set_configuration_property(self, property_name, property):
