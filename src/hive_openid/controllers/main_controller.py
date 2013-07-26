@@ -148,8 +148,8 @@ class MainController(controllers.Controller):
         @param parameters: The handler parameters.
         """
 
-        # retrieves the information user plugin
-        information_user_plugin = self.plugin.information_user_plugin
+        # retrieves the info user plugin
+        info_user_plugin = self.plugin.info_user_plugin
 
         # retrieves the openid user pattern
         openid_user = self.get_pattern(parameters, OPENID_USER_VALUE)
@@ -157,9 +157,9 @@ class MainController(controllers.Controller):
         # retrieves the host path for the xrds path as the openid xrds address
         openid_xrds = self._get_host_path(rest_request, "/xrds?openid_user=" + openid_user)
 
-        # retrieves the user information from the information user plugin
+        # retrieves the user information from the info user plugin
         # using the openid user
-        openid_user_information = information_user_plugin.get_user_information_user_key(openid_user)
+        openid_user_information = info_user_plugin.get_user_information_user_key(openid_user)
 
         # in case the openid user information is not found
         if not openid_user_information:
@@ -191,15 +191,15 @@ class MainController(controllers.Controller):
         @param parameters: The handler parameters.
         """
 
-        # retrieves the information user plugin
-        information_user_plugin = self.plugin.information_user_plugin
+        # retrieves the info user plugin
+        info_user_plugin = self.plugin.info_user_plugin
 
         # retrieves the openid user pattern
         openid_user = self.get_pattern(parameters, OPENID_USER_VALUE)
 
-        # retrieves the user information from the information user plugin
+        # retrieves the user information from the info user plugin
         # using the openid user
-        openid_user_information = information_user_plugin.get_user_information_user_key(openid_user)
+        openid_user_information = info_user_plugin.get_user_information_user_key(openid_user)
 
         # processes the contents of the template file assigning the
         # appropriate values to it
@@ -454,8 +454,8 @@ class MainController(controllers.Controller):
         # retrieves the main authentication plugin
         authentication_plugin = self.plugin.authentication_plugin
 
-        # retrieves the information user plugin
-        information_user_plugin = self.plugin.information_user_plugin
+        # retrieves the info user plugin
+        info_user_plugin = self.plugin.info_user_plugin
 
         # retrieves the authentication properties map
         authentication_properties_map = self.system.authentication_properties_map
@@ -502,9 +502,9 @@ class MainController(controllers.Controller):
         # retrieves the authentication username
         authentication_username = authentication_result.get(USERNAME_VALUE, None)
 
-        # retrieves the user information from the information user plugin
+        # retrieves the user information from the info user plugin
         # using the authentication username
-        authentication_user_information = information_user_plugin.get_user_information_user_key(authentication_username)
+        authentication_user_information = info_user_plugin.get_user_information_user_key(authentication_username)
 
         # in case there is no authentication user information
         if not authentication_user_information:
