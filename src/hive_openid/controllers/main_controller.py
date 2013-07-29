@@ -159,7 +159,7 @@ class MainController(controllers.Controller):
 
         # retrieves the user information from the info user plugin
         # using the openid user
-        openid_user_information = info_user_plugin.get_user_information_user_key(openid_user)
+        openid_user_information = info_user_plugin.get_user_info(openid_user)
 
         # in case the openid user information is not found
         if not openid_user_information:
@@ -199,7 +199,7 @@ class MainController(controllers.Controller):
 
         # retrieves the user information from the info user plugin
         # using the openid user
-        openid_user_information = info_user_plugin.get_user_information_user_key(openid_user)
+        openid_user_information = info_user_plugin.get_user_info(openid_user)
 
         # processes the contents of the template file assigning the
         # appropriate values to it
@@ -504,7 +504,7 @@ class MainController(controllers.Controller):
 
         # retrieves the user information from the info user plugin
         # using the authentication username
-        authentication_user_information = info_user_plugin.get_user_information_user_key(authentication_username)
+        authentication_user_information = info_user_plugin.get_user_info(authentication_username)
 
         # in case there is no authentication user information
         if not authentication_user_information:
