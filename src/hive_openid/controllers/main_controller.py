@@ -135,7 +135,7 @@ class MainController(controllers.Controller):
             partial_page = "index_contents.html.tpl"
         )
         self._assign_base(rest_request, template_file)
-        self.process_set_contents(rest_request, template_file)
+        self.process_set_contents(rest_request, template_file, assign_session = True)
 
     @mvc_utils.serialize_exceptions("all")
     def handle_user(self, rest_request, parameters = {}):
@@ -178,7 +178,7 @@ class MainController(controllers.Controller):
         template_file.assign(OPENID_USER_VALUE, openid_user)
         template_file.assign(OPENID_USER_INFORMATION_VALUE, openid_user_information)
         self._assign_base(rest_request, template_file)
-        self.process_set_contents(rest_request, template_file)
+        self.process_set_contents(rest_request, template_file, assign_session = True)
 
     @mvc_utils.serialize_exceptions("all")
     def handle_user_vcard(self, rest_request, parameters = {}):
@@ -207,7 +207,7 @@ class MainController(controllers.Controller):
         template_file.assign(OPENID_USER_VALUE, openid_user)
         template_file.assign(OPENID_USER_INFORMATION_VALUE, openid_user_information)
         self._assign_base(rest_request, template_file)
-        self.process_set_contents(rest_request, template_file, content_type = "text/x-vcard")
+        self.process_set_contents(rest_request, template_file, assign_session = True, content_type = "text/x-vcard")
 
     @mvc_utils.serialize_exceptions("all")
     def handle_signin(self, rest_request, parameters = {}):
@@ -227,7 +227,7 @@ class MainController(controllers.Controller):
              partial_page = "signin_contents.html.tpl"
         )
         self._assign_base(rest_request, template_file)
-        self.process_set_contents(rest_request, template_file)
+        self.process_set_contents(rest_request, template_file, assign_session = True)
 
     @mvc_utils.serialize_exceptions("all")
     def handle_allow(self, rest_request, parameters = {}):
@@ -247,7 +247,7 @@ class MainController(controllers.Controller):
             partial_page = "allow_contents.html.tpl"
         )
         self._assign_base(rest_request, template_file)
-        self.process_set_contents(rest_request, template_file)
+        self.process_set_contents(rest_request, template_file, assign_session = True)
 
     @mvc_utils.serialize_exceptions("all")
     def handle_approve(self, rest_request, parameters = {}):
@@ -267,7 +267,7 @@ class MainController(controllers.Controller):
             partial_page = "approve_contents.html.tpl"
         )
         self._assign_base(rest_request, template_file)
-        self.process_set_contents(rest_request, template_file)
+        self.process_set_contents(rest_request, template_file, assign_session = True)
 
     @mvc_utils.serialize_exceptions("all")
     def handle_server(self, rest_request, parameters = {}):
@@ -359,17 +359,35 @@ class MainController(controllers.Controller):
         # processes the login, retrieving the authentication user information
         authentication_user_information = self.process_login(rest_request, form_data_map)
 
-        # in case the authentication was successful
+        # in case the authentication was successful, the user must be
+        # logged in the current account for the current session
         if authentication_user_information:
-            # sets the login attribute in the session
-            self.set_session_attribute(rest_request, "login", True, NAMESPACE_NAME)
+            # sets both the login flag attribute and the user information
+            # (dictionary value) in the current session to be used for latter
+            # configuration and model control (required for authentication)
+            self.set_session_attribute(
+                rest_request,
+                "login",
+                True,
+                NAMESPACE_NAME
+            )
+            self.set_session_attribute(
+                rest_request,
+                "user_information",
+                authentication_user_information,
+                NAMESPACE_NAME
+            )
 
-            # sets the user information attribute in the session
-            self.set_session_attribute(rest_request, "user_information", authentication_user_information, NAMESPACE_NAME)
-        # otherwise
+        # otherwise the user must be removed from the current session in
+        # other to avoid any possible side problem
         else:
             # unsets the login attribute in the session
-            self.set_session_attribute(rest_request, "login", False, NAMESPACE_NAME)
+            self.set_session_attribute(
+                rest_request,
+                "login",
+                False,
+                NAMESPACE_NAME
+            )
 
         # retrieves the openid server from the session attribute
         openid_server = self.get_session_attribute(rest_request, "openid_server", NAMESPACE_NAME)
