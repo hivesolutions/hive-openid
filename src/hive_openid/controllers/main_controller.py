@@ -117,7 +117,7 @@ class MainController(controllers.Controller):
         controllers.Controller.__init__(self, plugin, system)
         self.association_handle_openid_server_map = {}
 
-    @mvc_utils.serialize_exceptions("all")
+    @mvc_utils.serialize("all")
     def handle_index(self, rest_request, parameters = {}):
         """
         Handles the given index rest request.
@@ -137,7 +137,7 @@ class MainController(controllers.Controller):
         self._assign_base(rest_request, template_file)
         self.process_set_contents(rest_request, template_file, assign_session = True)
 
-    @mvc_utils.serialize_exceptions("all")
+    @mvc_utils.serialize("all")
     def handle_user(self, rest_request, parameters = {}):
         """
         Handles the given user rest request.
@@ -180,7 +180,7 @@ class MainController(controllers.Controller):
         self._assign_base(rest_request, template_file)
         self.process_set_contents(rest_request, template_file, assign_session = True)
 
-    @mvc_utils.serialize_exceptions("all")
+    @mvc_utils.serialize("all")
     def handle_user_vcard(self, rest_request, parameters = {}):
         """
         Handles the given user vcard rest request.
@@ -209,7 +209,7 @@ class MainController(controllers.Controller):
         self._assign_base(rest_request, template_file)
         self.process_set_contents(rest_request, template_file, assign_session = True, content_type = "text/x-vcard")
 
-    @mvc_utils.serialize_exceptions("all")
+    @mvc_utils.serialize("all")
     def handle_signin(self, rest_request, parameters = {}):
         """
         Handles the given signin request.
@@ -229,7 +229,7 @@ class MainController(controllers.Controller):
         self._assign_base(rest_request, template_file)
         self.process_set_contents(rest_request, template_file, assign_session = True)
 
-    @mvc_utils.serialize_exceptions("all")
+    @mvc_utils.serialize("all")
     def handle_allow(self, rest_request, parameters = {}):
         """
         Handles the given allow request.
@@ -249,7 +249,7 @@ class MainController(controllers.Controller):
         self._assign_base(rest_request, template_file)
         self.process_set_contents(rest_request, template_file, assign_session = True)
 
-    @mvc_utils.serialize_exceptions("all")
+    @mvc_utils.serialize("all")
     def handle_approve(self, rest_request, parameters = {}):
         """
         Handles the given approve request.
@@ -269,7 +269,7 @@ class MainController(controllers.Controller):
         self._assign_base(rest_request, template_file)
         self.process_set_contents(rest_request, template_file, assign_session = True)
 
-    @mvc_utils.serialize_exceptions("all")
+    @mvc_utils.serialize("all")
     def handle_server(self, rest_request, parameters = {}):
         """
         Handles the given server rest request.
@@ -306,7 +306,7 @@ class MainController(controllers.Controller):
             # raises the invalid mode exception
             raise hive_openid.exceptions.InvalidMode(openid_mode)
 
-    @mvc_utils.serialize_exceptions("all")
+    @mvc_utils.serialize("all")
     def handle_xrds(self, rest_request, parameters = {}):
         """
         Handles the given xrds rest request.
@@ -342,7 +342,7 @@ class MainController(controllers.Controller):
         # sets the request contents
         self.set_contents(rest_request, processed_template_file, "application/xrds+xml")
 
-    @mvc_utils.serialize_exceptions("all")
+    @mvc_utils.serialize("all")
     def handle_login(self, rest_request, parameters = {}):
         """
         Handles the given login request.
@@ -415,7 +415,7 @@ class MainController(controllers.Controller):
         # redirects to the redirect page
         self.redirect_base_path(rest_request, "redirect")
 
-    @mvc_utils.serialize_exceptions("all")
+    @mvc_utils.serialize("all")
     def handle_logout(self, rest_request, parameters = {}):
         """
         Handles the given logout request.
@@ -432,7 +432,7 @@ class MainController(controllers.Controller):
         # redirects to the user page
         self.redirect_base_path(rest_request, "index")
 
-    @mvc_utils.serialize_exceptions("all")
+    @mvc_utils.serialize("all")
     def handle_redirect(self, rest_request, parameters = {}):
         """
         Handles the given redirect request.
