@@ -1,6 +1,6 @@
 ${include file="doctype.html.tpl" /}
 <head>
-    <title>${out_none value=title xml_escape=True /}</title>
+    <title>${out value=title xml_escape=True /}</title>
     ${include file="content_type.html.tpl" /}
     ${include file="openid_references.html.tpl" /}
     ${include file="includes.html.tpl" /}
