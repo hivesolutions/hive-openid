@@ -54,10 +54,10 @@ class HiveOpenidPlugin(colony.base.system.Plugin):
         "mvc_service"
     ]
     dependencies = [
-        colony.base.system.PluginDependency("pt.hive.colony.plugins.mvc.utils", "1.x.x"),
-        colony.base.system.PluginDependency("pt.hive.colony.plugins.api.openid", "1.x.x"),
-        colony.base.system.PluginDependency("pt.hive.colony.plugins.authentication", "1.x.x"),
-        colony.base.system.PluginDependency("pt.hive.colony.plugins.info.user", "1.x.x")
+        colony.base.system.PluginDependency("pt.hive.colony.plugins.mvc.utils"),
+        colony.base.system.PluginDependency("pt.hive.colony.plugins.api.openid"),
+        colony.base.system.PluginDependency("pt.hive.colony.plugins.authentication"),
+        colony.base.system.PluginDependency("pt.hive.colony.plugins.info.user")
     ]
     main_modules = [
         "hive_openid.exceptions",
