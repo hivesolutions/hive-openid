@@ -41,7 +41,7 @@ import hive_openid.exceptions
 DEFAULT_ENCODING = "utf-8"
 """ The default encoding value """
 
-NAMESPACE_NAME = "pt.hive.cronus.plugins.hive_openid"
+NAMESPACE_NAME = "hive_openid"
 """ The namespace name """
 
 OPENID_NAMESPACE_VALUE = "http://specs.openid.net/auth/2.0"
