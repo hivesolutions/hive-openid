@@ -60,8 +60,7 @@ class HiveOpenidPlugin(colony.base.system.Plugin):
         colony.base.system.PluginDependency("pt.hive.colony.plugins.info.user")
     ]
     main_modules = [
-        "hive_openid.exceptions",
-        "hive_openid.system"
+        "hive_openid"
     ]
 
     hive_openid = None
