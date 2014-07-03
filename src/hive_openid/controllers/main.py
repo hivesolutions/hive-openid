@@ -191,12 +191,15 @@ class MainController(base.BaseController):
 
         # retrieves the openid structure from the session attribute, and verifies
         # that the value is currently set and valid creating the proper server
-        # instance in case it's (server re-creation)
+        # instance in case it's (server re-creation), note that the openid server
+        # reference is also update in the handles map (otherwise problem would occur)
         openid_structure = request.get_s("openid_structure")
         if not openid_structure: return self.redirect_base_path(request, "redirect")
         openid_server = api_openid_plugin.create_server(
             dict(openid_structure = openid_structure)
         )
+        association_handle = openid_structure.get_association_handle()
+        self.handles_map[association_handle] = openid_server
 
         # retrieves the openid structure and uses it to retrieve the claimed id
         # as the username that is going to be used for validation
@@ -405,8 +408,8 @@ class MainController(base.BaseController):
             # retrieves the openid association handle and sets the
             # openid server in the association handle openid server
             # map for later retrieval
-            openid_association_handle = openid_structure.get_association_handle()
-            self.handles_map[openid_association_handle] = openid_server
+            association_handle = openid_structure.get_association_handle()
+            self.handles_map[association_handle] = openid_server
 
         # retrieves the openid structure for the current loaded
         # server and set the complete set of attributes from data
