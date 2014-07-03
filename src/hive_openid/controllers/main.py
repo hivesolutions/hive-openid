@@ -66,47 +66,34 @@ class MainController(base.BaseController):
         )
 
     @mvc_utils.serialize
-    def user(self, request):
-        """
-        Handles the given user request.
-
-        @type request: Request
-        @param request: The user request to be handled.
-        @type parameters: Dictionary
-        @param parameters: The handler parameters.
-        """
-
-        # retrieves the info user plugin
+    def user(self, request, username):
+        # retrieves the info user plugin that is going to be used to retrieve
+        # the information on the request user (through username matching)
         info_user_plugin = self.plugin.info_user_plugin
 
-        # retrieves the openid user pattern
-        openid_user = self.get_pattern(parameters, "openid_user")
-
         # retrieves the host path for the xrds path as the openid xrds address
-        openid_xrds = self._get_host_path(request, "/xrds?openid_user=" + openid_user)
+        # note that the address is "customized" using parameters
+        openid_xrds = self._get_host_path(request, "/xrds?openid_user=" + username)
 
         # retrieves the user information from the info user plugin
-        # using the openid user
-        openid_user_information = info_user_plugin.get_user_info(openid_user)
-
-        # in case the openid user information is not found
+        # using the openid user and in case no valid fvalue is found
+        # an exception is raised indicating the problem with the information
+        openid_user_information = info_user_plugin.get_user_info(username)
         if not openid_user_information:
-            # raises a user information error
             raise hive_openid.UserInformationError("user information not found")
 
-        # sets the xrds header value
+        # sets the xrds header value with the location of the information on
+        # the requested used, this may be used by the client to request yadis
         request.set_header("X-XRDS-Location", openid_xrds)
 
-        # processes the contents of the template file assigning the
-        # appropriate values to it
-        template_file = self.retrieve_template_file(
-            "general.html.tpl",
-            partial_page = "user_contents.html.tpl"
+        # runs the processing of the user information template, presenting
+        # some visual information to the user agent
+        self._template(
+            request = request,
+            partial_page = "user_contents.html.tpl",
+            openid_user = username,
+            openid_user_information = openid_user_information
         )
-        template_file.assign("openid_user", openid_user)
-        template_file.assign("openid_user_information", openid_user_information)
-        self._assign_base(request, template_file)
-        self.process_set_contents(request, template_file, assign_session = True)
 
     @mvc_utils.serialize
     def user_vcard(self, request):
