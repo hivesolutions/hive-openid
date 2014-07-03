@@ -34,10 +34,9 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "Hive Solutions Confidential Usage License (HSCUL)"
 """ The license for the module """
 
-import colony.base.system
-import colony.base.decorators
+import colony
 
-class HiveOpenidPlugin(colony.base.system.Plugin):
+class HiveOpenidPlugin(colony.Plugin):
     """
     The main class for the Hive Openid Main plugin.
     """
@@ -48,60 +47,41 @@ class HiveOpenidPlugin(colony.base.system.Plugin):
     version = "1.0.0"
     author = "Hive Solutions Lda. <development@hive.pt>"
     platforms = [
-        colony.base.system.CPYTHON_ENVIRONMENT
+        colony.CPYTHON_ENVIRONMENT
     ]
     capabilities = [
         "mvc_service"
     ]
     dependencies = [
-        colony.base.system.PluginDependency("pt.hive.colony.plugins.mvc.utils"),
-        colony.base.system.PluginDependency("pt.hive.colony.plugins.api.openid"),
-        colony.base.system.PluginDependency("pt.hive.colony.plugins.authentication"),
-        colony.base.system.PluginDependency("pt.hive.colony.plugins.info.user")
+        colony.PluginDependency("pt.hive.colony.plugins.mvc.utils"),
+        colony.PluginDependency("pt.hive.colony.plugins.api.openid"),
+        colony.PluginDependency("pt.hive.colony.plugins.authentication"),
+        colony.PluginDependency("pt.hive.colony.plugins.info.user")
     ]
     main_modules = [
         "hive_openid"
     ]
 
-    hive_openid = None
-    """ The hive openid """
-
-    mvc_utils_plugin = None
-    """ The mvc utils plugin """
-
-    api_openid_plugin = None
-    """ The api openid plugin """
-
-    authentication_plugin = None
-    """ The main authentication plugin """
-
-    info_user_plugin = None
-    """ The info user plugin """
-
     def load_plugin(self):
-        colony.base.system.Plugin.load_plugin(self)
-        import hive_openid.system
-        self.hive_openid = hive_openid.system.HiveOpenid(self)
+        colony.Plugin.load_plugin(self)
+        import hive_openid
+        self.system = hive_openid.HiveOpenid(self)
 
     def end_load_plugin(self):
-        colony.base.system.Plugin.end_load_plugin(self)
-        self.hive_openid.load_components()
+        colony.Plugin.end_load_plugin(self)
+        self.system.load_components()
 
     def unload_plugin(self):
-        colony.base.system.Plugin.unload_plugin(self)
-        self.hive_openid.unload_components()
+        colony.Plugin.unload_plugin(self)
+        self.system.unload_components()
 
-    @colony.base.decorators.inject_dependencies
-    def dependency_injected(self, plugin):
-        colony.base.system.Plugin.dependency_injected(self, plugin)
-
-    @colony.base.decorators.set_configuration_property
+    @colony.set_configuration_property
     def set_configuration_property(self, property_name, property):
-        colony.base.system.Plugin.set_configuration_property(self, property_name, property)
+        colony.Plugin.set_configuration_property(self, property_name, property)
 
-    @colony.base.decorators.unset_configuration_property
+    @colony.unset_configuration_property
     def unset_configuration_property(self, property_name):
-        colony.base.system.Plugin.unset_configuration_property(self, property_name)
+        colony.Plugin.unset_configuration_property(self, property_name)
 
     def get_patterns(self):
         """
@@ -114,21 +94,7 @@ class HiveOpenidPlugin(colony.base.system.Plugin):
         to the mvc service.
         """
 
-        return self.hive_openid.get_patterns()
-
-    def get_communication_patterns(self):
-        """
-        Retrieves the tuple of regular expressions to be used as communication patterns,
-        to the mvc service. The tuple should relate the route with a tuple
-        containing the data handler, the connection changed handler and the name
-        of the connection.
-
-        @rtype: Tuple
-        @return: The tuple of regular expressions to be used as communication patterns,
-        to the mvc service.
-        """
-
-        return self.hive_openid.get_communication_patterns()
+        return self.system.get_patterns()
 
     def get_resource_patterns(self):
         """
@@ -141,28 +107,12 @@ class HiveOpenidPlugin(colony.base.system.Plugin):
         to the mvc service.
         """
 
-        return self.hive_openid.get_resource_patterns()
+        return self.system.get_resource_patterns()
 
-    @colony.base.decorators.plugin_inject("pt.hive.colony.plugins.mvc.utils")
-    def set_mvc_utils_plugin(self, mvc_utils_plugin):
-        self.mvc_utils_plugin = mvc_utils_plugin
-
-    @colony.base.decorators.plugin_inject("pt.hive.colony.plugins.api.openid")
-    def set_api_openid_plugin(self, api_openid_plugin):
-        self.api_openid_plugin = api_openid_plugin
-
-    @colony.base.decorators.plugin_inject("pt.hive.colony.plugins.authentication")
-    def set_authentication_plugin(self, authentication_plugin):
-        self.authentication_plugin = authentication_plugin
-
-    @colony.base.decorators.plugin_inject("pt.hive.colony.plugins.info.user")
-    def set_info_user_plugin(self, info_user_plugin):
-        self.info_user_plugin = info_user_plugin
-
-    @colony.base.decorators.set_configuration_property_method("service_configuration")
+    @colony.set_configuration_property_method("service_configuration")
     def service_configuration_set_configuration_property(self, property_name, property):
-        self.hive_openid.set_service_configuration_property(property)
+        self.system.set_service_configuration_property(property)
 
-    @colony.base.decorators.unset_configuration_property_method("service_configuration")
+    @colony.unset_configuration_property_method("service_configuration")
     def service_configuration_unset_configuration_property(self, property_name):
-        self.hive_openid.unset_service_configuration_property()
+        self.system.unset_service_configuration_property()

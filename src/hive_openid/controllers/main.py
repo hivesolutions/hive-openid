@@ -34,9 +34,9 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "Hive Solutions Confidential Usage License (HSCUL)"
 """ The license for the module """
 
-import colony.libs.import_util
+import colony
 
-import hive_openid.exceptions
+import hive_openid
 
 DEFAULT_ENCODING = "utf-8"
 """ The default encoding value """
@@ -101,8 +101,8 @@ OPENID_SERVER_VALUE = "openid_server"
 OPENID_USER_BASE_VALUE = "openid_user_base"
 """ The openid base value """
 
-mvc_utils = colony.libs.import_util.__import__("mvc_utils")
-controllers = colony.libs.import_util.__import__("controllers")
+mvc_utils = colony.__import__("mvc_utils")
+controllers = colony.__import__("controllers")
 
 class MainController(controllers.Controller):
     """
@@ -164,7 +164,7 @@ class MainController(controllers.Controller):
         # in case the openid user information is not found
         if not openid_user_information:
             # raises a user information error
-            raise hive_openid.exceptions.UserInformationError("user information not found")
+            raise hive_openid.UserInformationError("user information not found")
 
         # sets the xrds header value
         rest_request.set_header(X_RDS_LOCATION_VALUE, openid_xrds)
@@ -304,7 +304,7 @@ class MainController(controllers.Controller):
             return self.process_check_authentication(rest_request, openid_data)
         else:
             # raises the invalid mode exception
-            raise hive_openid.exceptions.InvalidMode(openid_mode)
+            raise hive_openid.InvalidMode(openid_mode)
 
     @mvc_utils.serialize
     def handle_xrds(self, rest_request, parameters = {}):
@@ -407,7 +407,7 @@ class MainController(controllers.Controller):
             # user information username
             if not username == authentication_user_information_username:
                 # raises the user information error
-                raise hive_openid.exceptions.UserInformationError("invalid username for openid claimed id")
+                raise hive_openid.UserInformationError("invalid username for openid claimed id")
 
             # processes the request in the server
             openid_server.openid_request()
@@ -481,12 +481,12 @@ class MainController(controllers.Controller):
         # in case the authentication handler property is not defined
         if not AUTHENTICATION_HANDLER_VALUE in authentication_properties_map:
             # raises the missing property exception
-            raise hive_openid.exceptions.MissingProperty(AUTHENTICATION_HANDLER_VALUE)
+            raise hive_openid.MissingProperty(AUTHENTICATION_HANDLER_VALUE)
 
         # in case the arguments property is not defined
         if not ARGUMENTS_VALUE in authentication_properties_map:
             # raises the missing property exception
-            raise hive_openid.exceptions.MissingProperty(ARGUMENTS_VALUE)
+            raise hive_openid.MissingProperty(ARGUMENTS_VALUE)
 
         # retrieves the username
         username = user_data.get(USERNAME_VALUE, None)
@@ -515,7 +515,7 @@ class MainController(controllers.Controller):
             authentication_result_exception_message = authentication_result_exception.get(MESSAGE_VALUE, "undefined error")
 
             # raises the authentication failed exception
-            raise hive_openid.exceptions.AuthenticationFailed(authentication_result_exception_message)
+            raise hive_openid.AuthenticationFailed(authentication_result_exception_message)
 
         # retrieves the authentication username
         authentication_username = authentication_result.get(USERNAME_VALUE, None)
@@ -527,7 +527,7 @@ class MainController(controllers.Controller):
         # in case there is no authentication user information
         if not authentication_user_information:
             # raises the user information error
-            raise hive_openid.exceptions.UserInformationError("missing user information")
+            raise hive_openid.UserInformationError("missing user information")
 
         # returns the authentication user information
         return authentication_user_information

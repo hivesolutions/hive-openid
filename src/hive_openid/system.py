@@ -34,9 +34,9 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "Hive Solutions Confidential Usage License (HSCUL)"
 """ The license for the module """
 
-import colony.base.system
+import colony
 
-class HiveOpenid(colony.base.system.System):
+class HiveOpenid(colony.System):
     """
     The hive openid class.
     """
@@ -45,7 +45,7 @@ class HiveOpenid(colony.base.system.System):
     """ The authentication properties map """
 
     def __init__(self, plugin):
-        colony.base.system.System.__init__(self, plugin)
+        colony.System.__init__(self, plugin)
         self.authentication_properties_map = {}
 
     def load_components(self):
@@ -100,20 +100,6 @@ class HiveOpenid(colony.base.system.System):
             (r"^hive_openid/(?P<openid_user>[\w-]+)$", self.main_controller.handle_user, "get")
         )
 
-    def get_communication_patterns(self):
-        """
-        Retrieves the tuple of regular expressions to be used as communication patterns,
-        to the mvc service. The tuple should relate the route with a tuple
-        containing the data handler, the connection changed handler and the name
-        of the connection.
-
-        @rtype: Tuple
-        @return: The tuple of regular expressions to be used as communication patterns,
-        to the mvc service.
-        """
-
-        return ()
-
     def get_resource_patterns(self):
         """
         Retrieves the tuple of regular expressions to be used as resource patterns,
@@ -125,14 +111,13 @@ class HiveOpenid(colony.base.system.System):
         to the mvc service.
         """
 
-        # retrieves the plugin manager
+        # retrieves the plugin manager and uses it to retrieve
+        # the colony site plugin path
         plugin_manager = self.plugin.manager
-
-        # retrieves the plugin path
         plugin_path = plugin_manager.get_plugin_path_by_id(self.plugin.id)
 
         return (
-            (r"^hive_openid/resources/.+$", (plugin_path + "/hive_openid/resources/extras", "hive_openid/resources")),
+            (r"hive_openid/resources/.+", (plugin_path + "/hive_openid/resources/extras", "hive_openid/resources")),
         )
 
     def set_service_configuration_property(self, service_configuration_propery):
