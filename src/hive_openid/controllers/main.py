@@ -472,6 +472,12 @@ class MainController(base.BaseController):
         return_openid_structure.set_signature(signature)
         openid_server.openid_check_authentication(return_openid_structure)
 
+        # retrieves the currently defined openid structure from the
+        # server instance and updates the reference in the session
+        # this is required because the structure has changed meanwhile
+        openid_structure = openid_server.get_openid_structure()
+        request.set_s("openid_structure", openid_structure)
+
         # retrieves the encoded check authentication parameters and
         # sets it as plain text encoded for the current response
         data = openid_server.get_encoded_check_authentication_parameters()
