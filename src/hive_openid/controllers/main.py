@@ -99,6 +99,7 @@ class MainController(base.BaseController):
         self._template(
             request = request,
             template = "vcard.vcf.tpl",
+            content_type = "text/x-vcard",
             openid_user = username,
             openid_user_information = openid_user_information
         )
@@ -150,13 +151,11 @@ class MainController(base.BaseController):
     @mvc_utils.serialize
     def xrds(self, request):
         openid_user = request.field("openid_user", "invalid")
-        openid_server = self._get_host_path(request, "/server")
         openid_user_base = self._get_host_path(request, "/" + openid_user)
         self._template(
             request = request,
             template = "xrds.xml.tpl",
             content_type = "application/xrds+xml",
-            openid_server = openid_server,
             openid_user_base = openid_user_base
         )
 
