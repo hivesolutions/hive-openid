@@ -60,6 +60,7 @@ class HiveOpenid(colony.System):
         mvc_utils_plugin = self.plugin.mvc_utils_plugin
 
         # creates the controllers and assigns them to the current instance
+        # allowing them to start being used in the current workflow
         mvc_utils_plugin.assign_controllers(self, self.plugin)
 
     def unload_components(self):
@@ -71,7 +72,8 @@ class HiveOpenid(colony.System):
         # retrieves the mvc utils plugin
         mvc_utils_plugin = self.plugin.mvc_utils_plugin
 
-        # destroys the controllers, unregistering them from the internal structures
+        # destroys the controllers, unregistering them from the internal
+        # structures, this should prevent any more usage of the controllers
         mvc_utils_plugin.unassign_controllers(self)
 
     def get_patterns(self):
@@ -88,8 +90,8 @@ class HiveOpenid(colony.System):
         return (
             (r"hive_openid/?", self.main_controller.index, "get"),
             (r"hive_openid/index", self.main_controller.index, "get"),
-            (r"hive_openid/users/(?P<openid_user>[\w-]+)", self.main_controller.user_vcard, "get", "vcf"),
-            (r"hive_openid/users/(?P<openid_user>[\w-]+)", self.main_controller.user, "get"),
+            (r"hive_openid/users/<str:username>", self.main_controller.user_vcard, "get", "vcf"),
+            (r"hive_openid/users/<str:username>", self.main_controller.user, "get"),
             (r"hive_openid/signin", self.main_controller.signin, "get"),
             (r"hive_openid/allow", self.main_controller.allow, "get"),
             (r"hive_openid/approve", self.main_controller.approve, "get"),
@@ -98,8 +100,8 @@ class HiveOpenid(colony.System):
             (r"hive_openid/login", self.main_controller.login, "post"),
             (r"hive_openid/logout", self.main_controller.logout, "get"),
             (r"hive_openid/redirect", self.main_controller.redirect, "get"),
-            (r"hive_openid/(?P<openid_user>[\w-]+)", self.main_controller.user_vcard, "get", "vcf"),
-            (r"hive_openid/(?P<openid_user>[\w-]+)", self.main_controller.user, "get")
+            (r"hive_openid/<str:username>", self.main_controller.user_vcard, "get", "vcf"),
+            (r"hive_openid/<str:username>", self.main_controller.user, "get")
         )
 
     def get_resource_patterns(self):
