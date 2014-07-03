@@ -99,7 +99,7 @@ class HiveOpenid(colony.System):
             (r"hive_openid/xrds", self.main_controller.xrds, "get"),
             (r"hive_openid/login", self.main_controller.login, "post"),
             (r"hive_openid/logout", self.main_controller.logout, "get"),
-            (r"hive_openid/redirect", self.main_controller.redirect, "get"),
+            (r"hive_openid/redirect", self.main_controller.redirect_do, "get"),
             (r"hive_openid/<str:username>", self.main_controller.user_vcard, "get", "vcf"),
             (r"hive_openid/<str:username>", self.main_controller.user, "get")
         )
