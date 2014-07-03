@@ -232,7 +232,7 @@ class MainController(base.BaseController):
         # the user is logged in (or in the middle of auth) and
         # in case it's not redirects the user agent to the signin
         # page (as expected) that's the typical strategy
-        login = request.get_s("login")
+        login = request.get_s("login", False)
         if not login: self.redirect_base_path(request, "signin")
 
         # retrieves the openid structure from the session attribute
@@ -356,8 +356,9 @@ class MainController(base.BaseController):
         self.handles_map[openid_association_handle] = openid_server
 
     def process_check_id_setup(self, request, openid_data):
-        # retrieves the login session attribute
-        login = request.get_s("login")
+        # retrieves the login session attribute, that should indicate
+        # if there's an user currently logged in in the system or not
+        login = request.get_s("login", False)
 
         # retrieves the user information attribute and tries to retrieve
         # the username attribute from that same information package
@@ -398,7 +399,7 @@ class MainController(base.BaseController):
             openid_server.generate_openid_structure(provider_url)
 
             # associates the server and the provider, retrieving the
-            # openid structure
+            # openid structure, to be used in the association handle
             openid_structure = openid_server.openid_associate()
 
             # retrieves the openid association handle and sets the
@@ -431,7 +432,8 @@ class MainController(base.BaseController):
             self.redirect_base_path(request, "signin")
 
     def process_check_authentication(self, request, openid_data):
-        # retrieves the association handle
+        # retrieves the association handle from the openid data
+        # this is going to be used to retrieve the association
         association_handle = openid_data["assoc_handle"]
 
         # retrieves the other openid attributes, most of these
