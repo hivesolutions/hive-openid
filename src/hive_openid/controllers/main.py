@@ -165,6 +165,7 @@ class MainController(base.BaseController):
         form_data_map = self.process_form_data_flat(request, "utf-8")
 
         # processes the login, retrieving the authentication user information
+        # this operation may raise exception in case authentication fails
         user_information = self.process_login(request, form_data_map)
 
         # in case the authentication was successful, the user must be
@@ -185,7 +186,7 @@ class MainController(base.BaseController):
 
         # retrieves the openid server from the session attribute, and verifies
         # that the value is currently set and valid
-        openid_server = request.get_s(request, "openid_server")
+        openid_server = request.get_s("openid_server")
         if not openid_server: return self.redirect_base_path(request, "redirect")
 
         # retrieves the openid structure and uses it to retrieve the claimed id
@@ -213,94 +214,83 @@ class MainController(base.BaseController):
         self.redirect_base_path(request, "index")
 
     @mvc_utils.serialize
-    def redirect(self, request):
-        # retrieves the login session attribute
-        login = request.get_s(request, "login")
-
-        # in case the user is not logged in
-        if not login:
-            # redirects to the signin page
-            self.redirect_base_path(request, "signin")
+    def redirect_do(self, request):
+        # retrieves the login session attribute and verifies if
+        # the user is logged in and in case it's not redirects the
+        # user agent to the signin page (as expected)
+        login = request.get_s("login")
+        if not login: self.redirect_base_path(request, "signin")
 
         # retrieves the openid server from the session attribute
-        openid_server = request.get_s(request, "openid_server")
-
-        # in case the openid server is defined
+        # an in case it's defined runs the redirection to the
+        # the defined return url (external url)
+        openid_server = request.get_s("openid_server")
         if openid_server:
-            # retrieves the return url from the openid server
             return_url = openid_server.get_return_url()
-
-            # redirects to the return url page
             self.redirect_base_path(request, return_url, quote = False)
-        else:
-            # redirects to the index page
-            self.redirect_base_path(request, "index")
 
-        # unsets the openid server as session attribute
-        request.unset_s(request, "openid_server")
+        # otherwise this is a fallback situation and the user agent
+        # is redirected to the default index page
+        else: self.redirect_base_path(request, "index")
+
+        # unsets the openid server as session attribute as it may
+        # be defined and should be removed from session (touch operation)
+        request.unset_s("openid_server")
 
     def process_login(self, request, user_data):
-        # retrieves the main authentication plugin
+        # retrieves the various plugins that are going to be used
+        # in the processing of the login attempt
         authentication_plugin = self.plugin.authentication_plugin
-
-        # retrieves the info user plugin
         info_user_plugin = self.plugin.info_user_plugin
 
-        # retrieves the authentication properties map
+        # retrieves the authentication properties map, that is going
+        # to be used in the authentication process
         authentication_properties_map = self.system.authentication_properties_map
 
-        # in case the authentication handler property is not defined
+        # in case the authentication handler property is not defined, raises
+        # the missing property exception indicating the problem
         if not "authentication_handler" in authentication_properties_map:
-            # raises the missing property exception
             raise hive_openid.MissingProperty("authentication_handler")
 
-        # in case the arguments property is not defined
+        # in case the arguments property is not defined, raises the missing
+        # property exception indicating the problem
         if not "arguments" in authentication_properties_map:
-            # raises the missing property exception
             raise hive_openid.MissingProperty("arguments")
 
-        # retrieves the username
+        # unpacks the provider user data into the username and the password
+        # so that they may be used by the authentication handler
         username = user_data.get("username", None)
-
-        # retrieves the password
         password = user_data.get("password", None)
 
-        # retrieves the authentication handler
+        # retrieves the complete information for the authentication process
+        # (both the handler and the arguments) and runs the process validating
+        # the result of the authentication at the end of the call
         authentication_handler = authentication_properties_map["authentication_handler"]
-
-        # retrieves the arguments
         arguments = authentication_properties_map["arguments"]
-
-        # authenticates the user with the main authentication plugin retrieving the result
-        authentication_result = authentication_plugin.authenticate_user(username, password, authentication_handler, arguments)
-
-        # retrieves the authentication result
+        authentication_result = authentication_plugin.authenticate_user(
+            username, password, authentication_handler, arguments
+        )
         authentication_result_valid = authentication_result.get("valid", False)
 
-        # in case the authentication fails
+        # in case the authentication fails, unpacks the exception contents/message
+        # and raises an exception about the authentication failed process
         if not authentication_result_valid:
-            # retrieves the authentication result exception
-            authentication_result_exception = authentication_result.get("exception", {})
+            exception = authentication_result.get("exception", {})
+            exception_message = exception.get("message", "undefined error")
+            raise hive_openid.AuthenticationFailed(exception_message)
 
-            # retrieves the authentication result exception message
-            authentication_result_exception_message = authentication_result_exception.get("message", "undefined error")
-
-            # raises the authentication failed exception
-            raise hive_openid.AuthenticationFailed(authentication_result_exception_message)
-
-        # retrieves the authentication username
+        # retrieves the authentication username and uses it as the base for the
+        # gathering od the information about the user
         authentication_username = authentication_result.get("username", None)
-
-        # retrieves the user information from the info user plugin
-        # using the authentication username
         user_information = info_user_plugin.get_user_info(authentication_username)
 
-        # in case there is no authentication user information
+        # in case there is no authentication user information, must raise an
+        # exception indicating the need for more user information
         if not user_information:
-            # raises the user information error
             raise hive_openid.UserInformationError("missing user information")
 
-        # returns the authentication user information
+        # returns the authentication user information to the caller method as
+        # this is considered the result from the login operation
         return user_information
 
     def process_associate(self, request, openid_data):
@@ -323,7 +313,14 @@ class MainController(base.BaseController):
         consumer_public = openid_data.get("dh_consumer_public", None)
 
         # generates the openid structure
-        openid_server.generate_openid_structure(provider_url, association_type, session_type, prime_value, base_value, consumer_public)
+        openid_server.generate_openid_structure(
+            provider_url,
+            association_type,
+            session_type,
+            prime_value,
+            base_value,
+            consumer_public
+        )
 
         # associates the server and the provider, retrieving the
         # openid structure
@@ -347,7 +344,7 @@ class MainController(base.BaseController):
 
     def process_check_id_setup(self, request, openid_data):
         # retrieves the login session attribute
-        login = request.get_s(request, "login")
+        login = request.get_s("login")
 
         # retrieves the user information attribute
         user_information = request.get_s("user_information")
