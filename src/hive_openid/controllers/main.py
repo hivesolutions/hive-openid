@@ -47,13 +47,14 @@ mvc_utils = colony.__import__("mvc_utils")
 
 class MainController(base.BaseController):
 
-    association_handle_openid_server_map = {}
+    handles_map = {}
     """ The map associating the association handle
-    with the openid server """
+    with the openid server, this is used at runtime
+    to retrieve server instances for handles in auth """
 
     def __init__(self, plugin, system):
         base.BaseController.__init__(self, plugin, system)
-        self.association_handle_openid_server_map = {}
+        self.handles_map = {}
 
     @mvc_utils.serialize
     def index(self, request):
@@ -294,25 +295,24 @@ class MainController(base.BaseController):
         return user_information
 
     def process_associate(self, request, openid_data):
-        # retrieves the api openid plugin
+        # retrieves the api openid plugin using it in the generation
+        # of the service instance for the current auth workflow
         api_openid_plugin = self.plugin.api_openid_plugin
-
-        # creates the openid server
         openid_server = api_openid_plugin.create_server({})
 
-        # retrieves the provider url
+        # retrieves the provider url associated with the current
+        # request (to be used in the structure creation)
         provider_url = self._get_provider_url(request)
 
         # retrieves the openid attributes
         association_type = openid_data["assoc_type"]
         session_type = openid_data["session_type"]
 
-        # retrieves the diffie hellman attributes
+        # retrieves the diffie hellman attributes, and uses them to
+        # generate the proper structure information to be used latter
         prime_value = openid_data.get("dh_modulus", None)
         base_value = openid_data.get("dh_gen", None)
         consumer_public = openid_data.get("dh_consumer_public", None)
-
-        # generates the openid structure
         openid_server.generate_openid_structure(
             provider_url,
             association_type,
@@ -323,36 +323,31 @@ class MainController(base.BaseController):
         )
 
         # associates the server and the provider, retrieving the
-        # openid structure
+        # openid structure and uses it to retrieve the handle
         openid_structure = openid_server.openid_associate()
-
-        # retrieves the openid association handle
         openid_association_handle = openid_structure.get_association_handle()
 
-        # retrieves the encoded response parameters
-        encoded_response_parameters = openid_server.get_encoded_response_parameters()
-
-        # sets the request contents
-        self.set_contents(request, encoded_response_parameters, "text/plain")
+        # retrieves the encoded response parameters as a plain text
+        # data structure and serializes it into the current response
+        data = openid_server.get_encoded_response_parameters()
+        self.set_contents(request, data, "text/plain")
 
         # sets the openid server in the association handle
-        # openid server map for later retrieval
-        self.association_handle_openid_server_map[openid_association_handle] = openid_server
-
-        # returns true
-        return True
+        # openid server map for later retrieval, this is going to
+        # be used latter in the check id part of the process
+        self.handles_map[openid_association_handle] = openid_server
 
     def process_check_id_setup(self, request, openid_data):
         # retrieves the login session attribute
         login = request.get_s("login")
 
-        # retrieves the user information attribute
-        user_information = request.get_s("user_information")
+        # retrieves the user information attribute and tries to retrieve
+        # the username attribute from that same information package
+        user_information = request.get_s("user_information", {})
+        user_information_username = user_information.get("username", None)
 
-        # retrieves the user information username
-        user_information_username = user_information and user_information.get("username", None) or None
-
-        # retrieves the openid attributes
+        # retrieves the openid attributes from the provided openid data
+        # these are going to be used in the openid structure
         identity = openid_data["identity"]
         claimed_id = openid_data.get("claimed_id", identity)
         association_handle = openid_data.get("assoc_handle", None)
@@ -362,7 +357,7 @@ class MainController(base.BaseController):
 
         # in case the association handle does not exist in the association
         # handle openid server map
-        if not association_handle in self.association_handle_openid_server_map:
+        if not association_handle in self.handles_map:
             # invalidates the association handle, the communication is converted
             # into stateless mode
             invalidate_handle = association_handle
@@ -370,70 +365,52 @@ class MainController(base.BaseController):
 
         # in case the association handle is defined
         if association_handle:
-            # retrieves the openid server for the association handle
-            openid_server = self.association_handle_openid_server_map[association_handle]
+            openid_server = self.handles_map[association_handle]
+
         # otherwise a new openid server should be created
         # for the stateless mode
         else:
-            # retrieves the api openid plugin
+            # retrieves the api openid plugin and creates a new
+            # server instance using this same plugin
             api_openid_plugin = self.plugin.api_openid_plugin
-
-            # creates the openid server
             openid_server = api_openid_plugin.create_server({})
 
-            # retrieves the provider url
+            # retrieves the provider url and
             provider_url = self._get_provider_url(request)
-
-            # generates the openid structure
             openid_server.generate_openid_structure(provider_url)
 
             # associates the server and the provider, retrieving the
             # openid structure
             openid_structure = openid_server.openid_associate()
 
-            # retrieves the openid association handle
+            # retrieves the openid association handle and sets the
+            # openid server in the association handle openid server
+            # map for later retrieval
             openid_association_handle = openid_structure.get_association_handle()
+            self.handles_map[openid_association_handle] = openid_server
 
-            # sets the openid server in the association handle
-            # openid server map for later retrieval
-            self.association_handle_openid_server_map[openid_association_handle] = openid_server
-
-        # retrieves the openid structure
+        # retrieves the openid structure for the current loaded
+        # server and set the complete set of attributes from data
         openid_structure = openid_server.get_openid_structure()
-
-        # sets the structure attributes
         openid_structure.set_claimed_id(claimed_id)
         openid_structure.set_identity(identity)
         openid_structure.set_return_to(return_to)
         openid_structure.set_realm(realm)
         openid_structure.set_invalidate_handle(invalidate_handle)
 
-        # sets the openid structure in the session
+        # sets the openid server in the current session, so that
+        # it may be used latter for the login process
         request.set_s("openid_server", openid_server)
 
-        # retrieves the username from the
+        # retrieves the username from the the structure
+        # and verifies if the current situation is a login one
+        # and if the claimed and verified username are the same
         username = openid_structure.get_username_claimed_id()
-
-        # in case the user is already signed in
-        # and the username is valid
         if login and username == user_information_username:
-            # processes the request in the server
             openid_server.openid_request()
-
-            # redirects to the redirect page
             self.redirect_base_path(request, "redirect")
-
-            # returns true
-            return True
         else:
-            # redirects to the signin page
             self.redirect_base_path(request, "signin")
-
-            # returns true
-            return True
-
-        # returns true
-        return True
 
     def process_check_authentication(self, request, openid_data):
         # retrieves the association handle
@@ -450,7 +427,7 @@ class MainController(base.BaseController):
         signature = openid_data["sig"]
 
         # retrieves the openid server for the association handle
-        openid_server = self.association_handle_openid_server_map[association_handle]
+        openid_server = self.handles_map[association_handle]
 
         # retrieves the openid structure
         openid_structure = openid_server.get_openid_structure()
@@ -479,14 +456,10 @@ class MainController(base.BaseController):
         # checks the openid authentication
         openid_server.openid_check_authentication(return_openid_structure)
 
-        # retrieves the encoded check authentication parameters
-        encoded_check_authentication_parameters = openid_server.get_encoded_check_authentication_parameters()
-
-        # sets the request contents
-        self.set_contents(request, encoded_check_authentication_parameters, "text/plain")
-
-        # returns true
-        return True
+        # retrieves the encoded check authentication parameters and
+        # sets it as plain text encoded for the current response
+        data = openid_server.get_encoded_check_authentication_parameters()
+        self.set_contents(request, data, "text/plain")
 
     def _get_provider_url(self, request):
         # retrieves the host path for the server path as the provider url
