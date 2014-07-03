@@ -34,13 +34,24 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "Hive Solutions Confidential Usage License (HSCUL)"
 """ The license for the module """
 
-import base
+import colony
 
-class ExceptionController(base.BaseController):
+controllers = colony.__import__("controllers")
 
-    def exception(self, request, message = None, traceback = None):
-        self._template(
-            request = request,
-            partial_page = "exception.html.tpl",
-            exception_message = message
+class BaseController(controllers.Controller):
+
+    def __init__(self, plugin, system):
+        controllers.Controller.__init__(self, plugin, system)
+
+    def validate(self, request, parameters, validation_parameters):
+        return self.system.require_permissions(request, validation_parameters)
+
+    def template_file(self, template = "general.html.tpl", *args, **kwargs):
+        return self.retrieve_template_file(
+            file_path = template,
+            *args,
+            **kwargs
         )
+
+    def _template(self, assign_session = True, *args, **kwargs):
+        return self.template(assign_session = assign_session, *args, **kwargs)
