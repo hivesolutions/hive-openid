@@ -229,8 +229,9 @@ class MainController(base.BaseController):
         api_openid_plugin = self.plugin.api_openid_plugin
 
         # retrieves the login session attribute and verifies if
-        # the user is logged in and in case it's not redirects the
-        # user agent to the signin page (as expected)
+        # the user is logged in (or in the middle of auth) and
+        # in case it's not redirects the user agent to the signin
+        # page (as expected) that's the typical strategy
         login = request.get_s("login")
         if not login: self.redirect_base_path(request, "signin")
 
@@ -247,7 +248,8 @@ class MainController(base.BaseController):
             self.redirect_base_path(request, return_url, quote = False)
 
         # otherwise this is a fallback situation and the user agent
-        # is redirected to the default index page
+        # is redirected to the default index page, this should be
+        # a normal "in-site" login operation (typical situation)
         else: self.redirect_base_path(request, "index")
 
         # unsets the openid structure as session attribute as it may
