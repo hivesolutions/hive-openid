@@ -40,9 +40,6 @@ import hive_openid
 
 import base
 
-NAMESPACE_NAME = "hive_openid"
-""" The namespace name """
-
 OPENID_NAMESPACE_VALUE = "http://specs.openid.net/auth/2.0"
 """ The openid namespace value """
 
@@ -76,7 +73,7 @@ class MainController(base.BaseController):
         openid_xrds = self._get_host_path(request, "/xrds?openid_user=" + username)
 
         # retrieves the user information from the info user plugin
-        # using the openid user and in case no valid fvalue is found
+        # using the openid user and in case no valid value is found
         # an exception is raised indicating the problem with the information
         openid_user_information = info_user_plugin.get_user_info(username)
         if not openid_user_information:
@@ -108,240 +105,118 @@ class MainController(base.BaseController):
 
     @mvc_utils.serialize
     def signin(self, request):
-        """
-        Handles the given signin request.
-
-        @type request: Request
-        @param request: The signin request to be handled.
-        @type parameters: Dictionary
-        @param parameters: The handler parameters.
-        """
-
-        # processes the contents of the template file assigning the
-        # appropriate values to it
-        template_file = self.retrieve_template_file(
-            "general.html.tpl",
-             partial_page = "signin_contents.html.tpl"
+        self._template(
+            request = request,
+            partial_page = "signin_contents.html.tpl"
         )
-        self._assign_base(request, template_file)
-        self.process_set_contents(request, template_file, assign_session = True)
 
     @mvc_utils.serialize
     def allow(self, request):
-        """
-        Handles the given allow request.
-
-        @type request: Request
-        @param request: The allow request to be handled.
-        @type parameters: Dictionary
-        @param parameters: The handler parameters.
-        """
-
-        # processes the contents of the template file assigning the
-        # appropriate values to it
-        template_file = self.retrieve_template_file(
-            "general.html.tpl",
+        self._template(
+            request = request,
             partial_page = "allow_contents.html.tpl"
         )
-        self._assign_base(request, template_file)
-        self.process_set_contents(request, template_file, assign_session = True)
 
     @mvc_utils.serialize
     def approve(self, request):
-        """
-        Handles the given approve request.
-
-        @type request: Request
-        @param request: The approve request to be handled.
-        @type parameters: Dictionary
-        @param parameters: The handler parameters.
-        """
-
-        # processes the contents of the template file assigning the
-        # appropriate values to it
-        template_file = self.retrieve_template_file(
-            "general.html.tpl",
+        self._template(
+            request = request,
             partial_page = "approve_contents.html.tpl"
         )
-        self._assign_base(request, template_file)
-        self.process_set_contents(request, template_file, assign_session = True)
 
     @mvc_utils.serialize
     def server(self, request):
-        """
-        Handles the given server request.
-
-        @type request: Request
-        @param request: The server request to be handled.
-        @type parameters: Dictionary
-        @param parameters: The handler parameters.
-        """
-
-        # retrieves the form data by processing the form
+        # processes the form data of the request in flat mode and uses
+        # the resulting values to retrieve the openid information
         form_data_map = self.process_form_data_flat(request, "utf-8")
-
-        # retrieves the openid data
         openid_data = form_data_map.get("openid", {})
-
-        # retrieves the openid mode
         openid_mode = openid_data.get("mode", "invalid")
 
-        # prints a debug message
+        # prints a debug message mentioning the mode that is going
+        # to be used in the interaction with the server
         self.plugin.debug("Receiving request '%s' from client" % openid_mode)
 
-        # in case it's is a post request (associate)
+        # verifies the target execution mode of the openid request
+        # and runs the "associated" processing for each mode, in
+        # case an invalid type is defined an exception is raised
         if openid_mode == "associate":
-            # processes the associate
             return self.process_associate(request, openid_data)
         elif openid_mode == "checkid_setup":
-            # processes the checkid setup
             return self.process_check_id_setup(request, openid_data)
         elif openid_mode == "check_authentication":
-            # processes the check authentication
             return self.process_check_authentication(request, openid_data)
-        else:
-            # raises the invalid mode exception
-            raise hive_openid.InvalidMode(openid_mode)
+        else: raise hive_openid.InvalidMode(openid_mode)
 
     @mvc_utils.serialize
     def xrds(self, request):
-        """
-        Handles the given xrds request.
-
-        @type request: Request
-        @param request: The xrds request to be handled.
-        @type parameters: Dictionary
-        @param parameters: The handler parameters.
-        """
-
-        # retrieves the form data by processing the form
-        form_data_map = self.process_form_data(request)
-
-        # retrieves the openid data
-        openid_user = form_data_map.get("openid_user", "invalid")
-
-        # retrieves the host path for the server path as the openid server address
+        openid_user = request.field("openid_user", "invalid")
         openid_server = self._get_host_path(request, "/server")
-
-        # retrieves the host path for the user base path as the openid user base address
         openid_user_base = self._get_host_path(request, "/" + openid_user)
-
-        # retrieves the template file
-        template_file = self.retrieve_template_file("xrds.xml.tpl")
-
-        # assigns the template variables
-        template_file.assign("openid_server", openid_server)
-        template_file.assign("openid_user_base", openid_user_base)
-
-        # processes the template file
-        processed_template_file = self.process_template_file(request, template_file)
-
-        # sets the request contents
-        self.set_contents(request, processed_template_file, "application/xrds+xml")
+        self._template(
+            request = request,
+            template = "xrds.xml.tpl",
+            content_type = "application/xrds+xml",
+            openid_server = openid_server,
+            openid_user_base = openid_user_base
+        )
 
     @mvc_utils.serialize
     def login(self, request):
-        """
-        Handles the given login request.
-
-        @type request: Request
-        @param request: The login request to be handled.
-        @type parameters: Dictionary
-        @param parameters: The handler parameters.
-        """
-
         # retrieves the form data by processing the form
         form_data_map = self.process_form_data_flat(request, "utf-8")
 
         # processes the login, retrieving the authentication user information
-        authentication_user_information = self.process_login(request, form_data_map)
+        user_information = self.process_login(request, form_data_map)
 
         # in case the authentication was successful, the user must be
         # logged in the current account for the current session
-        if authentication_user_information:
+        if user_information:
             # sets both the login flag attribute and the user information
             # (dictionary value) in the current session to be used for latter
             # configuration and model control (required for authentication)
-            self.set_session_attribute(
-                request,
-                "login",
-                True,
-                NAMESPACE_NAME
-            )
-            self.set_session_attribute(
-                request,
-                "user_information",
-                authentication_user_information,
-                NAMESPACE_NAME
-            )
+            request.set_s("login", True)
+            request.set_s("user_information", user_information)
 
         # otherwise the user must be removed from the current session in
         # other to avoid any possible side problem
         else:
-            # unsets the login attribute in the session
-            self.set_session_attribute(
-                request,
-                "login",
-                False,
-                NAMESPACE_NAME
-            )
+            # unsets the login attribute the complete set of attributes
+            # currently associated with the user (to avoid problems)
+            request.set_s("login", False)
 
-        # retrieves the openid server from the session attribute
-        openid_server = self.get_session_attribute(request, "openid_server", NAMESPACE_NAME)
+        # retrieves the openid server from the session attribute, and verifies
+        # that the value is currently set and valid
+        openid_server = request.get_s(request, "openid_server")
+        if not openid_server: return self.redirect_base_path(request, "redirect")
 
-        # in case there is an openid validation pending
-        if openid_server:
-            # retrieves the openid structure
-            openid_structure = openid_server.get_openid_structure()
+        # retrieves the openid structure and uses it to retrieve the claimed id
+        # as the username that is going to be used for validation
+        openid_structure = openid_server.get_openid_structure()
+        username = openid_structure.get_username_claimed_id()
 
-            # retrieves the username from the
-            username = openid_structure.get_username_claimed_id()
+        # retrieves the user information username this is the value that is going
+        # to be used for the matching and runs the matching raising an exception
+        # in case the matching operation fails (username values are different)
+        _username = user_information.get("username", None)
+        if not username == _username:
+            raise hive_openid.UserInformationError("invalid username for openid claimed id")
 
-            # retrieves the authentication user information username
-            authentication_user_information_username = authentication_user_information.get("username", None)
-
-            # in case the username is not the same as the authentication
-            # user information username
-            if not username == authentication_user_information_username:
-                # raises the user information error
-                raise hive_openid.UserInformationError("invalid username for openid claimed id")
-
-            # processes the request in the server
-            openid_server.openid_request()
-
-        # redirects to the redirect page
+        # processes the request in the server and then runs the redirection to the
+        # target redirect operator page (will use value from session)
+        openid_server.openid_request()
         self.redirect_base_path(request, "redirect")
 
     @mvc_utils.serialize
     def logout(self, request):
-        """
-        Handles the given logout request.
-
-        @type request: Request
-        @param request: The logout request to be handled.
-        @type parameters: Dictionary
-        @param parameters: The handler parameters.
-        """
-
-        # unsets the login attribute in the session
-        self.set_session_attribute(request, "login", False, NAMESPACE_NAME)
-
-        # redirects to the user page
+        # unsets the login attribute in the session and then
+        # redirects to the user page as requested
+        request.set_s("login", False)
         self.redirect_base_path(request, "index")
 
     @mvc_utils.serialize
     def redirect(self, request):
-        """
-        Handles the given redirect request.
-
-        @type request: Request
-        @param request: The redirect request to be handled.
-        @type parameters: Dictionary
-        @param parameters: The handler parameters.
-        """
-
         # retrieves the login session attribute
-        login = self.get_session_attribute(request, "login", NAMESPACE_NAME)
+        login = request.get_s(request, "login")
 
         # in case the user is not logged in
         if not login:
@@ -349,7 +224,7 @@ class MainController(base.BaseController):
             self.redirect_base_path(request, "signin")
 
         # retrieves the openid server from the session attribute
-        openid_server = self.get_session_attribute(request, "openid_server", NAMESPACE_NAME)
+        openid_server = request.get_s(request, "openid_server")
 
         # in case the openid server is defined
         if openid_server:
@@ -363,7 +238,7 @@ class MainController(base.BaseController):
             self.redirect_base_path(request, "index")
 
         # unsets the openid server as session attribute
-        self.unset_session_attribute(request, "openid_server", NAMESPACE_NAME)
+        request.unset_s(request, "openid_server")
 
     def process_login(self, request, user_data):
         # retrieves the main authentication plugin
@@ -419,15 +294,15 @@ class MainController(base.BaseController):
 
         # retrieves the user information from the info user plugin
         # using the authentication username
-        authentication_user_information = info_user_plugin.get_user_info(authentication_username)
+        user_information = info_user_plugin.get_user_info(authentication_username)
 
         # in case there is no authentication user information
-        if not authentication_user_information:
+        if not user_information:
             # raises the user information error
             raise hive_openid.UserInformationError("missing user information")
 
         # returns the authentication user information
-        return authentication_user_information
+        return user_information
 
     def process_associate(self, request, openid_data):
         # retrieves the api openid plugin
@@ -473,10 +348,10 @@ class MainController(base.BaseController):
 
     def process_check_id_setup(self, request, openid_data):
         # retrieves the login session attribute
-        login = self.get_session_attribute(request, "login", NAMESPACE_NAME)
+        login = request.get_s(request, "login")
 
         # retrieves the user information attribute
-        user_information = self.get_session_attribute(request, "user_information", NAMESPACE_NAME)
+        user_information = request.get_s("user_information")
 
         # retrieves the user information username
         user_information_username = user_information and user_information.get("username", None) or None
@@ -538,7 +413,7 @@ class MainController(base.BaseController):
         openid_structure.set_invalidate_handle(invalidate_handle)
 
         # sets the openid structure in the session
-        self.set_session_attribute(request, "openid_server", openid_server, NAMESPACE_NAME)
+        request.set_s("openid_server", openid_server)
 
         # retrieves the username from the
         username = openid_structure.get_username_claimed_id()
@@ -589,7 +464,12 @@ class MainController(base.BaseController):
         session_type = openid_structure.get_session_type()
 
         # creates the openid return structure
-        return_openid_structure = openid_server.generate_openid_structure(provider_url, association_type, session_type, set_structure = False)
+        return_openid_structure = openid_server.generate_openid_structure(
+            provider_url,
+            association_type,
+            session_type,
+            set_structure = False
+        )
 
         # sets some of the items of the openid structure
         return_openid_structure.set_ns(ns)
@@ -612,17 +492,8 @@ class MainController(base.BaseController):
         # returns true
         return True
 
-    def _assign_base(self, request, template_file):
-        # retrieves the host path for the server path as the openid server address
-        openid_server = self._get_host_path(request, "/server")
-
-        # assigns the template variables
-        template_file.assign("title", "Hive Solutions OpenID")
-        template_file.assign("openid_server", openid_server)
-
     def _get_provider_url(self, request):
         # retrieves the host path for the server path as the provider url
+        # and returns it to the caller method to be used
         provider_url = self._get_host_path(request, "/server")
-
-        # returns the provider url
         return provider_url

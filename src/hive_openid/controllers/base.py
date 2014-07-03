@@ -36,6 +36,8 @@ __license__ = "Hive Solutions Confidential Usage License (HSCUL)"
 
 import colony
 
+TITLE = "Hive Solutions OpenID"
+
 controllers = colony.__import__("controllers")
 
 class BaseController(controllers.Controller):
@@ -46,9 +48,13 @@ class BaseController(controllers.Controller):
     def validate(self, request, parameters, validation_parameters):
         return self.system.require_permissions(request, validation_parameters)
 
-    def template_file(self, template = "general.html.tpl", *args, **kwargs):
+    def template_file(self, template = "general.html.tpl", title = TITLE, *args, **kwargs):
+        request = kwargs.get("request", None)
+        openid_server = self._get_host_path(request, "/server")
         return self.retrieve_template_file(
             file_path = template,
+            title = title,
+            openid_server = openid_server,
             *args,
             **kwargs
         )
