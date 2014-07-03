@@ -86,20 +86,20 @@ class HiveOpenid(colony.System):
         """
 
         return (
-            (r"^hive_openid/?$", self.main_controller.handle_index, "get"),
-            (r"^hive_openid/index$", self.main_controller.handle_index, "get"),
-            (r"^hive_openid/users/(?P<openid_user>[\w-]+)$", self.main_controller.handle_user_vcard, "get", "vcf"),
-            (r"^hive_openid/users/(?P<openid_user>[\w-]+)$", self.main_controller.handle_user, "get"),
-            (r"^hive_openid/signin$", self.main_controller.handle_signin, "get"),
-            (r"^hive_openid/allow$", self.main_controller.handle_allow, "get"),
-            (r"^hive_openid/approve$", self.main_controller.handle_approve, "get"),
-            (r"^hive_openid/server$", self.main_controller.handle_server, ("get", "post")),
-            (r"^hive_openid/xrds$", self.main_controller.handle_xrds, "get"),
-            (r"^hive_openid/login$", self.main_controller.handle_login, "post"),
-            (r"^hive_openid/logout$", self.main_controller.handle_logout, "get"),
-            (r"^hive_openid/redirect$", self.main_controller.handle_redirect, "get"),
-            (r"^hive_openid/(?P<openid_user>[\w-]+)$", self.main_controller.handle_user_vcard, "get", "vcf"),
-            (r"^hive_openid/(?P<openid_user>[\w-]+)$", self.main_controller.handle_user, "get")
+            (r"hive_openid/?", self.main_controller.index, "get"),
+            (r"hive_openid/index", self.main_controller.index, "get"),
+            (r"hive_openid/users/(?P<openid_user>[\w-]+)", self.main_controller.user_vcard, "get", "vcf"),
+            (r"hive_openid/users/(?P<openid_user>[\w-]+)", self.main_controller.user, "get"),
+            (r"hive_openid/signin", self.main_controller.signin, "get"),
+            (r"hive_openid/allow", self.main_controller.allow, "get"),
+            (r"hive_openid/approve", self.main_controller.approve, "get"),
+            (r"hive_openid/server", self.main_controller.server, ("get", "post")),
+            (r"hive_openid/xrds", self.main_controller.xrds, "get"),
+            (r"hive_openid/login", self.main_controller.login, "post"),
+            (r"hive_openid/logout", self.main_controller.logout, "get"),
+            (r"hive_openid/redirect", self.main_controller.redirect, "get"),
+            (r"hive_openid/(?P<openid_user>[\w-]+)", self.main_controller.user_vcard, "get", "vcf"),
+            (r"hive_openid/(?P<openid_user>[\w-]+)", self.main_controller.user, "get")
         )
 
     def get_resource_patterns(self):
