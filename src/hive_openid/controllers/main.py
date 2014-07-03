@@ -38,6 +38,8 @@ import colony
 
 import hive_openid
 
+import base
+
 DEFAULT_ENCODING = "utf-8"
 """ The default encoding value """
 
@@ -102,19 +104,15 @@ OPENID_USER_BASE_VALUE = "openid_user_base"
 """ The openid base value """
 
 mvc_utils = colony.__import__("mvc_utils")
-controllers = colony.__import__("controllers")
 
-class MainController(controllers.Controller):
-    """
-    The main controller.
-    """
+class MainController(base.BaseController):
 
     association_handle_openid_server_map = {}
     """ The map associating the association handle
     with the openid server """
 
     def __init__(self, plugin, system):
-        controllers.Controller.__init__(self, plugin, system)
+        base.BaseController.__init__(self, plugin, system)
         self.association_handle_openid_server_map = {}
 
     @mvc_utils.serialize
