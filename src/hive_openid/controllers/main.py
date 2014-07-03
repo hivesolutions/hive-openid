@@ -432,7 +432,9 @@ class MainController(base.BaseController):
         # retrieves the association handle
         association_handle = openid_data["assoc_handle"]
 
-        # retrieves the other openid attributes
+        # retrieves the other openid attributes, most of these
+        # values are going to be used as part of the return
+        # openid structure creation/population
         ns = openid_data.get("ns", OPENID_NAMESPACE_VALUE)
         provider_url = openid_data["op_endpoint"]
         claimed_id = openid_data["claimed_id"]
@@ -443,24 +445,22 @@ class MainController(base.BaseController):
         signature = openid_data["sig"]
 
         # retrieves the openid server for the association handle
+        # and uses it to retrieve the underlying openid structure
+        # gathering then some of its attributes
         openid_server = self.handles_map[association_handle]
-
-        # retrieves the openid structure
         openid_structure = openid_server.get_openid_structure()
-
-        # retrieves the openid attributes
         association_type = openid_structure.get_association_type()
         session_type = openid_structure.get_session_type()
 
-        # creates the openid return structure
+        # creates the openid return structure populating many of it's
+        # fields from the received openid data and then uses it to run
+        # the check authentication part of the process
         return_openid_structure = openid_server.generate_openid_structure(
             provider_url,
             association_type,
             session_type,
             set_structure = False
         )
-
-        # sets some of the items of the openid structure
         return_openid_structure.set_ns(ns)
         return_openid_structure.set_claimed_id(claimed_id)
         return_openid_structure.set_identity(identity)
@@ -468,8 +468,6 @@ class MainController(base.BaseController):
         return_openid_structure.set_response_nonce(response_nonce)
         return_openid_structure.set_signed(signed)
         return_openid_structure.set_signature(signature)
-
-        # checks the openid authentication
         openid_server.openid_check_authentication(return_openid_structure)
 
         # retrieves the encoded check authentication parameters and
