@@ -96,33 +96,15 @@ class MainController(base.BaseController):
         )
 
     @mvc_utils.serialize
-    def user_vcard(self, request):
-        """
-        Handles the given user vcard request.
-
-        @type request: Request
-        @param request: The user vcard request to be handled.
-        @type parameters: Dictionary
-        @param parameters: The handler parameters.
-        """
-
-        # retrieves the info user plugin
+    def user_vcard(self, request, username):
         info_user_plugin = self.plugin.info_user_plugin
-
-        # retrieves the openid user pattern
-        openid_user = self.get_pattern(parameters, "openid_user")
-
-        # retrieves the user information from the info user plugin
-        # using the openid user
-        openid_user_information = info_user_plugin.get_user_info(openid_user)
-
-        # processes the contents of the template file assigning the
-        # appropriate values to it
-        template_file = self.retrieve_template_file("vcard.vcf.tpl")
-        template_file.assign("openid_user", openid_user)
-        template_file.assign("openid_user_information", openid_user_information)
-        self._assign_base(request, template_file)
-        self.process_set_contents(request, template_file, assign_session = True, content_type = "text/x-vcard")
+        openid_user_information = info_user_plugin.get_user_info(username)
+        self._template(
+            request = request,
+            template = "vcard.vcf.tpl",
+            openid_user = username,
+            openid_user_information = openid_user_information
+        )
 
     @mvc_utils.serialize
     def signin(self, request):
