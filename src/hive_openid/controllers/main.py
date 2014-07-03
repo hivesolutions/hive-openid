@@ -162,6 +162,10 @@ class MainController(base.BaseController):
 
     @mvc_utils.serialize
     def login(self, request):
+        # retrieves the reference to the openid plugin that is going
+        # to be used for the re-creation of the openid server
+        api_openid_plugin = self.plugin.api_openid_plugin
+
         # retrieves the form data by processing the form
         form_data_map = self.process_form_data_flat(request, "utf-8")
 
@@ -185,10 +189,14 @@ class MainController(base.BaseController):
             # currently associated with the user (to avoid problems)
             request.set_s("login", False)
 
-        # retrieves the openid server from the session attribute, and verifies
-        # that the value is currently set and valid
-        openid_server = request.get_s("openid_server")
-        if not openid_server: return self.redirect_base_path(request, "redirect")
+        # retrieves the openid structure from the session attribute, and verifies
+        # that the value is currently set and valid creating the proper server
+        # instance in case it's (server re-creation)
+        openid_structure = request.get_s("openid_structure")
+        if not openid_structure: return self.redirect_base_path(request, "redirect")
+        openid_server = api_openid_plugin.create_server(
+            dict(openid_structure = openid_structure)
+        )
 
         # retrieves the openid structure and uses it to retrieve the claimed id
         # as the username that is going to be used for validation
@@ -216,17 +224,25 @@ class MainController(base.BaseController):
 
     @mvc_utils.serialize
     def redirect_do(self, request):
+        # retrieves the reference to the openid plugin that is going
+        # to be used for the re-creation of the openid server
+        api_openid_plugin = self.plugin.api_openid_plugin
+
         # retrieves the login session attribute and verifies if
         # the user is logged in and in case it's not redirects the
         # user agent to the signin page (as expected)
         login = request.get_s("login")
         if not login: self.redirect_base_path(request, "signin")
 
-        # retrieves the openid server from the session attribute
+        # retrieves the openid structure from the session attribute
         # an in case it's defined runs the redirection to the
-        # the defined return url (external url)
-        openid_server = request.get_s("openid_server")
-        if openid_server:
+        # the defined return url (external url), note that the open
+        # id server instance must be re-created for such usage
+        openid_structure = request.get_s("openid_structure")
+        if openid_structure:
+            openid_server = api_openid_plugin.create_server(
+                dict(openid_structure = openid_structure)
+            )
             return_url = openid_server.get_return_url()
             self.redirect_base_path(request, return_url, quote = False)
 
@@ -234,9 +250,9 @@ class MainController(base.BaseController):
         # is redirected to the default index page
         else: self.redirect_base_path(request, "index")
 
-        # unsets the openid server as session attribute as it may
+        # unsets the openid structure as session attribute as it may
         # be defined and should be removed from session (touch operation)
-        request.unset_s("openid_server")
+        request.unset_s("openid_structure")
 
     def process_login(self, request, user_data):
         # retrieves the various plugins that are going to be used
@@ -398,9 +414,9 @@ class MainController(base.BaseController):
         openid_structure.set_realm(realm)
         openid_structure.set_invalidate_handle(invalidate_handle)
 
-        # sets the openid server in the current session, so that
+        # sets the openid structure in the current session, so that
         # it may be used latter for the login process
-        request.set_s("openid_server", openid_server)
+        request.set_s("openid_structure", openid_structure)
 
         # retrieves the username from the the structure
         # and verifies if the current situation is a login one
