@@ -42,7 +42,9 @@ class HiveOpenid(colony.System):
     """
 
     authentication_properties_map = {}
-    """ The authentication properties map """
+    """ The authentication properties map, this is the map
+    that contains the configuration that is going to be used
+    at runtime to "guide" the authentication process """
 
     def __init__(self, plugin):
         colony.System.__init__(self, plugin)
@@ -121,15 +123,13 @@ class HiveOpenid(colony.System):
         )
 
     def set_service_configuration_property(self, service_configuration_propery):
-        # retrieves the service configuration
+        # retrieves the service configuration and extracts the proper
+        # authentication information from it setting it under the system
         service_configuration = service_configuration_propery.get_data()
-
-        # retrieves the authentication properties map
         authentication_properties_map = service_configuration["authentication_properties"]
-
-        # sets the authentication properties map
         self.authentication_properties_map = authentication_properties_map
 
     def unset_service_configuration_property(self):
-        # sets the authentication properties map
+        # unsets the authentication properties map, restoring it to the
+        # original invalid/empty value that does not provide authentication
         self.authentication_properties_map = {}
