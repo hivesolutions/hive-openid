@@ -60,7 +60,7 @@ class MainController(base.BaseController):
     def index(self, request):
         self._template(
             request = request,
-            partial_page = "index_contents.html.tpl"
+            partial_page = "general/index.html.tpl"
         )
 
     @mvc_utils.serialize
@@ -88,7 +88,7 @@ class MainController(base.BaseController):
         # some visual information to the user agent
         self._template(
             request = request,
-            partial_page = "user_contents.html.tpl",
+            partial_page = "general/user.html.tpl",
             openid_user = username,
             openid_user_information = openid_user_information
         )
@@ -99,7 +99,7 @@ class MainController(base.BaseController):
         openid_user_information = info_user_plugin.get_user_info(username)
         self._template(
             request = request,
-            template = "vcard.vcf.tpl",
+            template = "extra/vcard.vcf.tpl",
             content_type = "text/x-vcard",
             openid_user = username,
             openid_user_information = openid_user_information
@@ -109,21 +109,21 @@ class MainController(base.BaseController):
     def signin(self, request):
         self._template(
             request = request,
-            partial_page = "signin_contents.html.tpl"
+            partial_page = "general/signin.html.tpl"
         )
 
     @mvc_utils.serialize
     def allow(self, request):
         self._template(
             request = request,
-            partial_page = "allow_contents.html.tpl"
+            partial_page = "general/allow.html.tpl"
         )
 
     @mvc_utils.serialize
     def approve(self, request):
         self._template(
             request = request,
-            partial_page = "approve_contents.html.tpl"
+            partial_page = "general/approve.html.tpl"
         )
 
     @mvc_utils.serialize
@@ -155,7 +155,7 @@ class MainController(base.BaseController):
         openid_user_base = self._get_host_path(request, "/" + openid_user)
         self._template(
             request = request,
-            template = "xrds.xml.tpl",
+            template = "extra/xrds.xml.tpl",
             content_type = "application/xrds+xml",
             openid_user_base = openid_user_base
         )
