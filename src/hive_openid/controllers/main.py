@@ -38,14 +38,14 @@ import colony
 
 import hive_openid
 
-import base
+from .base import BaseController
 
 OPENID_NAMESPACE_VALUE = "http://specs.openid.net/auth/2.0"
 """ The openid namespace value """
 
 mvc_utils = colony.__import__("mvc_utils")
 
-class MainController(base.BaseController):
+class MainController(BaseController):
 
     handles_map = {}
     """ The map associating the association handle
@@ -53,7 +53,7 @@ class MainController(base.BaseController):
     to retrieve server instances for handles in auth """
 
     def __init__(self, plugin, system):
-        base.BaseController.__init__(self, plugin, system)
+        BaseController.__init__(self, plugin, system)
         self.handles_map = {}
 
     @mvc_utils.serialize
