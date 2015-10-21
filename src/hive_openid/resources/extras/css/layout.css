@@ -31,8 +31,8 @@ body {
     font-family: Arial;
     font-size: 10pt;
     font-weight: bold;
-    margin: 0;
-    padding: 0;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
     width: 100%;
 }
 
@@ -140,7 +140,7 @@ a:hover {
 }
 
 #header-wrapper {
-    margin: 0px auto;
+    margin: 0px auto 0px auto;
     width: 960px;
 }
 
@@ -289,7 +289,7 @@ a:hover {
 }
 
 #main-wrapper {
-    margin: 0px auto;
+    margin: 0px auto 0px auto;
     width: 960px;
 }
 
@@ -340,14 +340,14 @@ a:hover {
 }
 
 #signin-form {
-    margin: 50px auto;
+    margin: 50px auto 50px auto;
     width: 300px;
 }
 
 #general-form {
     border-left: 1px solid #246594;
     float: left;
-    margin: 50px 0px;
+    margin: 50px 0px 50px 0px;
     padding-left: 80px;
     width: 679px;
 }
@@ -355,7 +355,7 @@ a:hover {
 #full-form {
     border-left: 1px solid #246594;
     float: left;
-    margin: 50px 0px;
+    margin: 50px 0px 50px 0px;
     padding-left: 80px;
     width: 660px;
 }
@@ -396,7 +396,7 @@ a:hover {
 }
 
 #user-search-form {
-    margin: 50px auto;
+    margin: 50px auto 50px auto;
     text-align: center;
     width: 500px;
 }
@@ -500,7 +500,7 @@ span.order-down-off:hover {
     font-weight: normal;
     list-style: none;
     margin-top: -10px;
-    padding: 0px;
+    padding: 0px 0px 0px 0px;
     width: 660px;
 }
 
@@ -601,7 +601,7 @@ span.order-down-off:hover {
     font-size: 9pt;
     line-height: 22px;
     list-style: none;
-    padding: 0px 10px;
+    padding: 0px 10px 0px 10px;
     text-transform: uppercase;
 }
 
@@ -651,7 +651,7 @@ li.sub-menu:hover {
     border-top: 1px solid #7794a5;
     clear: both;
     display: block;
-    margin: 0px auto;
+    margin: 0px auto 0px auto;
     width: 960px;
 }
 
