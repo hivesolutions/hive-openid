@@ -62,11 +62,11 @@ var __formSubmit = function(event) {
 };
 
 jQuery(document).ready(function() {
-            // binds the click event of the button to
-            // the button click function
-            jQuery("div.button").bind("click", __buttonClick);
+    // binds the click event of the button to
+    // the button click function
+    jQuery("div.button").bind("click", __buttonClick);
 
-            // binds the click event of the submit button to
-            // the form submit function
-            jQuery("form div.submit").bind("click", __formSubmit);
-        });
+    // binds the click event of the submit button to
+    // the form submit function
+    jQuery("form div.submit").bind("click", __formSubmit);
+});
