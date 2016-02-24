@@ -1,29 +1,29 @@
 @charset "utf-8";
 
 /*
- Hive Solutions Openid
- Copyright (c) 2008-2016 Hive Solutions Lda.
+Hive Solutions Openid
+Copyright (c) 2008-2016 Hive Solutions Lda.
 
- This file is part of Hive Solutions Openid.
+This file is part of Hive Solutions Openid.
 
- Hive Solutions Openid is confidential and property of Hive Solutions Lda.,
- its usage is constrained by the terms of the Hive Solutions
- Confidential Usage License.
+Hive Solutions Openid is confidential and property of Hive Solutions Lda.,
+its usage is constrained by the terms of the Hive Solutions
+Confidential Usage License.
 
- Hive Solutions Openid should not be distributed under any circumstances,
- violation of this may imply legal action.
+Hive Solutions Openid should not be distributed under any circumstances,
+violation of this may imply legal action.
 
- If you have any questions regarding the terms of this license please
- refer to <http://www.hive.pt/licenses/>.
+If you have any questions regarding the terms of this license please
+refer to <http://www.hive.pt/licenses/>.
 */
 
 /*
- __author__    = Marco Sousa <v-msousa@hive.pt> & João Magalhães <joamag@hive.pt>
- __version__   = 1.0.0
- __revision__  = $LastChangedRevision$
- __date__      = $LastChangedDate$
- __copyright__ = Copyright (c) 2008-2016 Hive Solutions Lda.
- __license__   = Hive Solutions Confidential Usage License (HSCUL)
+__author__    = Marco Sousa <v-msousa@hive.pt> & João Magalhães <joamag@hive.pt>
+__version__   = 1.0.0
+__revision__  = $LastChangedRevision$
+__date__      = $LastChangedDate$
+__copyright__ = Copyright (c) 2008-2016 Hive Solutions Lda.
+__license__   = Hive Solutions Confidential Usage License (HSCUL)
 */
 
 body {
@@ -506,11 +506,11 @@ span.order-down-off:hover {
 
 .full-list-colorline {
     background-color: #ffffff;
-    padding: 8px;
+    padding: 8px 8px 8px 8px;
 }
 
 .full-list-line {
-    padding: 8px;
+    padding: 8px 8px 8px 8px;
 }
 
 .full-list-site {
