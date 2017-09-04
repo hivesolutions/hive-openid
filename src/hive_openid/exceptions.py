@@ -53,8 +53,8 @@ class InvalidMode(HiveOpenidException):
         """
         Constructor of the class.
 
-        @type message: String
-        @param message: The message to be printed.
+        :type message: String
+        :param message: The message to be printed.
         """
 
         HiveOpenidException.__init__(self)
@@ -64,8 +64,8 @@ class InvalidMode(HiveOpenidException):
         """
         Returns the string representation of the class.
 
-        @rtype: String
-        @return: The string representation of the class.
+        :rtype: String
+        :return: The string representation of the class.
         """
 
         return "Invalid mode - %s" % self.message
@@ -79,8 +79,8 @@ class MissingProperty(HiveOpenidException):
         """
         Constructor of the class.
 
-        @type message: String
-        @param message: The message to be printed.
+        :type message: String
+        :param message: The message to be printed.
         """
 
         HiveOpenidException.__init__(self)
@@ -90,8 +90,8 @@ class MissingProperty(HiveOpenidException):
         """
         Returns the string representation of the class.
 
-        @rtype: String
-        @return: The string representation of the class.
+        :rtype: String
+        :return: The string representation of the class.
         """
 
         return "Missing property - %s" % self.message
@@ -105,8 +105,8 @@ class AuthenticationFailed(HiveOpenidException):
         """
         Constructor of the class.
 
-        @type message: String
-        @param message: The message to be printed.
+        :type message: String
+        :param message: The message to be printed.
         """
 
         HiveOpenidException.__init__(self)
@@ -116,8 +116,8 @@ class AuthenticationFailed(HiveOpenidException):
         """
         Returns the string representation of the class.
 
-        @rtype: String
-        @return: The string representation of the class.
+        :rtype: String
+        :return: The string representation of the class.
         """
 
         return "Authentication failed - %s" % self.message
@@ -131,8 +131,8 @@ class UserInformationError(HiveOpenidException):
         """
         Constructor of the class.
 
-        @type message: String
-        @param message: The message to be printed.
+        :type message: String
+        :param message: The message to be printed.
         """
 
         HiveOpenidException.__init__(self)
@@ -142,8 +142,8 @@ class UserInformationError(HiveOpenidException):
         """
         Returns the string representation of the class.
 
-        @rtype: String
-        @return: The string representation of the class.
+        :rtype: String
+        :return: The string representation of the class.
         """
 
         return "User information error - %s" % self.message
