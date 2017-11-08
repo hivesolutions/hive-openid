@@ -1,6 +1,6 @@
 <div id="main-wrapper">
     <div id="user-search-form">
-        <img id="user-search-form-image" class="image image-logo" src="${out value=base_path /}resources/images/hive_openid_service.png"></img>
+        <img id="user-search-form-image" class="image image-logo" src="${out value=base_path /}resources/images/hive_openid_service.png" />
         <div class="user-search">
             <input class="input input-user-search dark-blue" type="text" tabindex="1" name="username" />
             <div class="button button-user-search button-dark-green">
