@@ -188,8 +188,11 @@ a:hover {
     cursor: pointer;
     text-align: center;
     user-select: none;
-    -moz-user-select: -moz-none;
+    -o-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
     -khtml-user-select: none;
+    -webkit-user-select: none;
 }
 
 .button-dark-blue-small {
@@ -211,6 +214,11 @@ a:hover {
     display: block;
     padding-top: 5px;
     text-shadow: 0px 1px 1px #164a73;
+    -o-text-shadow: 0px 1px 1px #164a73;
+    -ms-text-shadow: 0px 1px 1px #164a73;
+    -moz-text-shadow: 0px 1px 1px #164a73;
+    -khtml-text-shadow: 0px 1px 1px #164a73;
+    -webkit-text-shadow: 0px 1px 1px #164a73;
 }
 
 .button-dark-green {
@@ -233,6 +241,11 @@ a:hover {
     font-size: 12pt;
     padding-top: 10px;
     text-shadow: 0 1px 1px #295c00;
+    -o-text-shadow: 0 1px 1px #295c00;
+    -ms-text-shadow: 0 1px 1px #295c00;
+    -moz-text-shadow: 0 1px 1px #295c00;
+    -khtml-text-shadow: 0 1px 1px #295c00;
+    -webkit-text-shadow: 0 1px 1px #295c00;
 }
 
 .button-dark-green-small {
@@ -254,6 +267,11 @@ a:hover {
     display: block;
     padding-top: 5px;
     text-shadow: 0px 1px 1px #164a73;
+    -o-text-shadow: 0px 1px 1px #164a73;
+    -ms-text-shadow: 0px 1px 1px #164a73;
+    -moz-text-shadow: 0px 1px 1px #164a73;
+    -khtml-text-shadow: 0px 1px 1px #164a73;
+    -webkit-text-shadow: 0px 1px 1px #164a73;
 }
 
 .button-light-gray {
@@ -276,6 +294,11 @@ a:hover {
     font-size: 12pt;
     padding-top: 10px;
     text-shadow: 0 1px 1px #ffffff;
+    -o-text-shadow: 0 1px 1px #ffffff;
+    -ms-text-shadow: 0 1px 1px #ffffff;
+    -moz-text-shadow: 0 1px 1px #ffffff;
+    -khtml-text-shadow: 0 1px 1px #ffffff;
+    -webkit-text-shadow: 0 1px 1px #ffffff;
 }
 
 .checkbox {
@@ -363,7 +386,10 @@ a:hover {
 .input {
     border: 2px solid #90a5c7;
     border-radius: 4px 4px 4px 4px;
+    -o-border-radius: 4px 4px 4px 4px;
+    -ms-border-radius: 4px 4px 4px 4px;
     -moz-border-radius: 4px 4px 4px 4px;
+    -khtml-border-radius: 4px 4px 4px 4px;
     -webkit-border-radius: 4px 4px 4px 4px;
     display: block;
     font-family: Arial;
@@ -372,6 +398,11 @@ a:hover {
     height: 25px;
     letter-spacing: 1px;
     outline: none;
+    -o-outline: none;
+    -ms-outline: none;
+    -moz-outline: none;
+    -khtml-outline: none;
+    -webkit-outline: none;
     padding: 6px 6px 6px 6px;
     width: 300px;
 }
@@ -590,7 +621,10 @@ span.order-down-off:hover {
 
 #user-avatar {
     box-shadow: 2px 2px 4px #cccccc;
+    -o-box-shadow: 2px 2px 4px #cccccc;
+    -ms-box-shadow: 2px 2px 4px #cccccc;
     -moz-box-shadow: 2px 2px 4px #cccccc;
+    -khtml-box-shadow: 2px 2px 4px #cccccc;
     -webkit-box-shadow: 2px 2px 4px #cccccc;
     height: 200px;
     width: 200px;
