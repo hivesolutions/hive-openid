@@ -1,16 +1,16 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Hive Solutions Openid
+# Hive Solutions OpenID
 # Copyright (c) 2008-2020 Hive Solutions Lda.
 #
-# This file is part of Hive Solutions Openid.
+# This file is part of Hive Solutions OpenID.
 #
-# Hive Solutions Openid is confidential and property of Hive Solutions Lda.,
+# Hive Solutions OpenID is confidential and property of Hive Solutions Lda.,
 # its usage is constrained by the terms of the Hive Solutions
 # Confidential Usage License.
 #
-# Hive Solutions Openid should not be distributed under any circumstances,
+# Hive Solutions OpenID should not be distributed under any circumstances,
 # violation of this may imply legal action.
 #
 # If you have any questions regarding the terms of this license please
@@ -41,7 +41,7 @@ import hive_openid
 from .base import BaseController
 
 OPENID_NAMESPACE_VALUE = "http://specs.openid.net/auth/2.0"
-""" The openid namespace value """
+""" The OpenID namespace value """
 
 mvc_utils = colony.__import__("mvc_utils")
 
@@ -49,7 +49,7 @@ class MainController(BaseController):
 
     handles_map = {}
     """ The map associating the association handle
-    with the openid server, this is used at runtime
+    with the OpenID server, this is used at runtime
     to retrieve server instances for handles in auth """
 
     def __init__(self, plugin, system):
@@ -69,12 +69,12 @@ class MainController(BaseController):
         # the information on the request user (through username matching)
         info_user_plugin = self.plugin.info_user_plugin
 
-        # retrieves the host path for the xrds path as the openid xrds address
+        # retrieves the host path for the xrds path as the OpenID xrds address
         # note that the address is "customized" using parameters
         openid_xrds = self._get_host_path(request, "/xrds?openid_user=" + username)
 
         # retrieves the user information from the info user plugin
-        # using the openid user and in case no valid value is found
+        # using the OpenID user and in case no valid value is found
         # an exception is raised indicating the problem with the information
         openid_user_information = info_user_plugin.get_user_info(username)
         if not openid_user_information:
@@ -129,7 +129,7 @@ class MainController(BaseController):
     @mvc_utils.serialize
     def server(self, request):
         # processes the form data of the request in flat mode and uses
-        # the resulting values to retrieve the openid information
+        # the resulting values to retrieve the OpenID information
         form_data_map = self.process_form_data_flat(request, "utf-8")
         openid_data = form_data_map.get("openid", {})
         openid_mode = openid_data.get("mode", "invalid")
@@ -138,7 +138,7 @@ class MainController(BaseController):
         # to be used in the interaction with the server
         self.plugin.debug("Receiving request '%s' from client" % openid_mode)
 
-        # verifies the target execution mode of the openid request
+        # verifies the target execution mode of the OpenID request
         # and runs the "associated" processing for each mode, in
         # case an invalid type is defined an exception is raised
         if openid_mode == "associate":
@@ -162,8 +162,8 @@ class MainController(BaseController):
 
     @mvc_utils.serialize
     def login(self, request):
-        # retrieves the reference to the openid plugin that is going
-        # to be used for the re-creation of the openid server
+        # retrieves the reference to the OpenID plugin that is going
+        # to be used for the re-creation of the OpenID server
         api_openid_plugin = self.plugin.api_openid_plugin
 
         # retrieves the form data by processing the form
@@ -189,9 +189,9 @@ class MainController(BaseController):
             # currently associated with the user (to avoid problems)
             request.set_s("login", False)
 
-        # retrieves the openid structure from the session attribute, and verifies
+        # retrieves the OpenID structure from the session attribute, and verifies
         # that the value is currently set and valid creating the proper server
-        # instance in case it's (server re-creation), note that the openid server
+        # instance in case it's (server re-creation), note that the OpenID server
         # reference is also update in the handles map (otherwise problem would occur)
         openid_structure = request.get_s("openid_structure")
         if not openid_structure: return self.redirect_base_path(request, "redirect")
@@ -201,7 +201,7 @@ class MainController(BaseController):
         association_handle = openid_structure.get_association_handle()
         self.handles_map[association_handle] = openid_server
 
-        # retrieves the openid structure and uses it to retrieve the claimed id
+        # retrieves the OpenID structure and uses it to retrieve the claimed id
         # as the username that is going to be used for validation
         openid_structure = openid_server.get_openid_structure()
         username = openid_structure.get_username_claimed_id()
@@ -211,7 +211,7 @@ class MainController(BaseController):
         # in case the matching operation fails (username values are different)
         _username = user_information.get("username", None)
         if not username == _username:
-            raise hive_openid.UserInformationError("invalid username for openid claimed id")
+            raise hive_openid.UserInformationError("invalid username for OpenID claimed id")
 
         # processes the request in the server and then runs the redirection to the
         # target redirect operator page (will use value from session)
@@ -227,8 +227,8 @@ class MainController(BaseController):
 
     @mvc_utils.serialize
     def redirect_do(self, request):
-        # retrieves the reference to the openid plugin that is going
-        # to be used for the re-creation of the openid server
+        # retrieves the reference to the OpenID plugin that is going
+        # to be used for the re-creation of the OpenID server
         api_openid_plugin = self.plugin.api_openid_plugin
 
         # retrieves the login session attribute and verifies if
@@ -238,7 +238,7 @@ class MainController(BaseController):
         login = request.get_s("login", False)
         if not login: self.redirect_base_path(request, "signin")
 
-        # retrieves the openid structure from the session attribute
+        # retrieves the OpenID structure from the session attribute
         # an in case it's defined runs the redirection to the
         # the defined return URL (external URL), note that the open
         # id server instance must be re-created for such usage
@@ -255,7 +255,7 @@ class MainController(BaseController):
         # a normal "in-site" login operation (typical situation)
         else: self.redirect_base_path(request, "index")
 
-        # unsets the openid structure as session attribute as it may
+        # unsets the OpenID structure as session attribute as it may
         # be defined and should be removed from session (touch operation)
         request.unset_s("openid_structure")
 
@@ -316,7 +316,7 @@ class MainController(BaseController):
         return user_information
 
     def process_associate(self, request, openid_data):
-        # retrieves the API openid plugin using it in the generation
+        # retrieves the API OpenID plugin using it in the generation
         # of the service instance for the current auth workflow
         api_openid_plugin = self.plugin.api_openid_plugin
         openid_server = api_openid_plugin.create_server({})
@@ -325,7 +325,7 @@ class MainController(BaseController):
         # request (to be used in the structure creation)
         provider_url = self._get_provider_url(request)
 
-        # retrieves the openid attributes
+        # retrieves the OpenID attributes
         association_type = openid_data["assoc_type"]
         session_type = openid_data["session_type"]
 
@@ -344,7 +344,7 @@ class MainController(BaseController):
         )
 
         # associates the server and the provider, retrieving the
-        # openid structure and uses it to retrieve the handle
+        # OpenID structure and uses it to retrieve the handle
         openid_structure = openid_server.openid_associate()
         openid_association_handle = openid_structure.get_association_handle()
 
@@ -353,8 +353,8 @@ class MainController(BaseController):
         data = openid_server.get_encoded_response_parameters()
         self.set_contents(request, data, "text/plain")
 
-        # sets the openid server in the association handle
-        # openid server map for later retrieval, this is going to
+        # sets the OpenID server in the association handle
+        # OpenID server map for later retrieval, this is going to
         # be used latter in the check id part of the process
         self.handles_map[openid_association_handle] = openid_server
 
@@ -368,8 +368,8 @@ class MainController(BaseController):
         user_information = request.get_s("user_information", {})
         user_information_username = user_information.get("username", None)
 
-        # retrieves the openid attributes from the provided openid data
-        # these are going to be used in the openid structure
+        # retrieves the OpenID attributes from the provided OpenID data
+        # these are going to be used in the OpenID structure
         identity = openid_data["identity"]
         claimed_id = openid_data.get("claimed_id", identity)
         association_handle = openid_data.get("assoc_handle", None)
@@ -378,7 +378,7 @@ class MainController(BaseController):
         invalidate_handle = None
 
         # in case the association handle does not exist in the association
-        # handle openid server map
+        # handle OpenID server map
         if not association_handle in self.handles_map:
             # invalidates the association handle, the communication is converted
             # into stateless mode
@@ -389,10 +389,10 @@ class MainController(BaseController):
         if association_handle:
             openid_server = self.handles_map[association_handle]
 
-        # otherwise a new openid server should be created
+        # otherwise a new OpenID server should be created
         # for the stateless mode
         else:
-            # retrieves the API openid plugin and creates a new
+            # retrieves the API OpenID plugin and creates a new
             # server instance using this same plugin
             api_openid_plugin = self.plugin.api_openid_plugin
             openid_server = api_openid_plugin.create_server({})
@@ -402,16 +402,16 @@ class MainController(BaseController):
             openid_server.generate_openid_structure(provider_url)
 
             # associates the server and the provider, retrieving the
-            # openid structure, to be used in the association handle
+            # OpenID structure, to be used in the association handle
             openid_structure = openid_server.openid_associate()
 
-            # retrieves the openid association handle and sets the
-            # openid server in the association handle openid server
+            # retrieves the OpenID association handle and sets the
+            # OpenID server in the association handle OpenID server
             # map for later retrieval
             association_handle = openid_structure.get_association_handle()
             self.handles_map[association_handle] = openid_server
 
-        # retrieves the openid structure for the current loaded
+        # retrieves the OpenID structure for the current loaded
         # server and set the complete set of attributes from data
         openid_structure = openid_server.get_openid_structure()
         openid_structure.set_claimed_id(claimed_id)
@@ -420,7 +420,7 @@ class MainController(BaseController):
         openid_structure.set_realm(realm)
         openid_structure.set_invalidate_handle(invalidate_handle)
 
-        # sets the openid structure in the current session, so that
+        # sets the OpenID structure in the current session, so that
         # it may be used latter for the login process
         request.set_s("openid_structure", openid_structure)
 
@@ -435,13 +435,13 @@ class MainController(BaseController):
             self.redirect_base_path(request, "signin")
 
     def process_check_authentication(self, request, openid_data):
-        # retrieves the association handle from the openid data
+        # retrieves the association handle from the OpenID data
         # this is going to be used to retrieve the association
         association_handle = openid_data["assoc_handle"]
 
-        # retrieves the other openid attributes, most of these
+        # retrieves the other OpenID attributes, most of these
         # values are going to be used as part of the return
-        # openid structure creation/population
+        # OpenID structure creation/population
         ns = openid_data.get("ns", OPENID_NAMESPACE_VALUE)
         provider_url = openid_data["op_endpoint"]
         claimed_id = openid_data["claimed_id"]
@@ -451,16 +451,16 @@ class MainController(BaseController):
         signed = openid_data["signed"]
         signature = openid_data["sig"]
 
-        # retrieves the openid server for the association handle
-        # and uses it to retrieve the underlying openid structure
+        # retrieves the OpenID server for the association handle
+        # and uses it to retrieve the underlying OpenID structure
         # gathering then some of its attributes
         openid_server = self.handles_map[association_handle]
         openid_structure = openid_server.get_openid_structure()
         association_type = openid_structure.get_association_type()
         session_type = openid_structure.get_session_type()
 
-        # creates the openid return structure populating many of it's
-        # fields from the received openid data and then uses it to run
+        # creates the OpenID return structure populating many of it's
+        # fields from the received OpenID data and then uses it to run
         # the check authentication part of the process
         return_openid_structure = openid_server.generate_openid_structure(
             provider_url,
@@ -477,7 +477,7 @@ class MainController(BaseController):
         return_openid_structure.set_signature(signature)
         openid_server.openid_check_authentication(return_openid_structure)
 
-        # retrieves the currently defined openid structure from the
+        # retrieves the currently defined OpenID structure from the
         # server instance and updates the reference in the session
         # this is required because the structure has changed meanwhile
         openid_structure = openid_server.get_openid_structure()

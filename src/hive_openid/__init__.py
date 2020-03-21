@@ -1,16 +1,16 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Hive Solutions Openid
+# Hive Solutions OpenID
 # Copyright (c) 2008-2020 Hive Solutions Lda.
 #
-# This file is part of Hive Solutions Openid.
+# This file is part of Hive Solutions OpenID.
 #
-# Hive Solutions Openid is confidential and property of Hive Solutions Lda.,
+# Hive Solutions OpenID is confidential and property of Hive Solutions Lda.,
 # its usage is constrained by the terms of the Hive Solutions
 # Confidential Usage License.
 #
-# Hive Solutions Openid should not be distributed under any circumstances,
+# Hive Solutions OpenID should not be distributed under any circumstances,
 # violation of this may imply legal action.
 #
 # If you have any questions regarding the terms of this license please
@@ -34,6 +34,6 @@ __license__ = "Hive Solutions Confidential Usage License (HSCUL)"
 from . import exceptions
 from . import system
 
-from .exceptions import HiveOpenidException, InvalidMode, MissingProperty, AuthenticationFailed,\
+from .exceptions import HiveOpenIDException, InvalidMode, MissingProperty, AuthenticationFailed,\
     UserInformationError
-from .system import HiveOpenid
+from .system import HiveOpenID

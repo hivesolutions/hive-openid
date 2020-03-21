@@ -1,16 +1,16 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Hive Solutions Openid
+# Hive Solutions OpenID
 # Copyright (c) 2008-2020 Hive Solutions Lda.
 #
-# This file is part of Hive Solutions Openid.
+# This file is part of Hive Solutions OpenID.
 #
-# Hive Solutions Openid is confidential and property of Hive Solutions Lda.,
+# Hive Solutions OpenID is confidential and property of Hive Solutions Lda.,
 # its usage is constrained by the terms of the Hive Solutions
 # Confidential Usage License.
 #
-# Hive Solutions Openid should not be distributed under any circumstances,
+# Hive Solutions OpenID should not be distributed under any circumstances,
 # violation of this may imply legal action.
 #
 # If you have any questions regarding the terms of this license please
@@ -36,15 +36,15 @@ __license__ = "Hive Solutions Confidential Usage License (HSCUL)"
 
 import colony
 
-class HiveOpenidException(colony.ColonyException):
+class HiveOpenIDException(colony.ColonyException):
     """
-    The hive openid exception class.
+    The Hive OpenID exception class.
     """
 
     message = None
     """ The exception's message """
 
-class InvalidMode(HiveOpenidException):
+class InvalidMode(HiveOpenIDException):
     """
     The invalid mode class.
     """
@@ -57,7 +57,7 @@ class InvalidMode(HiveOpenidException):
         :param message: The message to be printed.
         """
 
-        HiveOpenidException.__init__(self)
+        HiveOpenIDException.__init__(self)
         self.message = message
 
     def __str__(self):
@@ -70,7 +70,7 @@ class InvalidMode(HiveOpenidException):
 
         return "Invalid mode - %s" % self.message
 
-class MissingProperty(HiveOpenidException):
+class MissingProperty(HiveOpenIDException):
     """
     The missing property class.
     """
@@ -83,7 +83,7 @@ class MissingProperty(HiveOpenidException):
         :param message: The message to be printed.
         """
 
-        HiveOpenidException.__init__(self)
+        HiveOpenIDException.__init__(self)
         self.message = message
 
     def __str__(self):
@@ -96,7 +96,7 @@ class MissingProperty(HiveOpenidException):
 
         return "Missing property - %s" % self.message
 
-class AuthenticationFailed(HiveOpenidException):
+class AuthenticationFailed(HiveOpenIDException):
     """
     The authentication failed class.
     """
@@ -109,7 +109,7 @@ class AuthenticationFailed(HiveOpenidException):
         :param message: The message to be printed.
         """
 
-        HiveOpenidException.__init__(self)
+        HiveOpenIDException.__init__(self)
         self.message = message
 
     def __str__(self):
@@ -122,7 +122,7 @@ class AuthenticationFailed(HiveOpenidException):
 
         return "Authentication failed - %s" % self.message
 
-class UserInformationError(HiveOpenidException):
+class UserInformationError(HiveOpenIDException):
     """
     The user information error class.
     """
@@ -135,7 +135,7 @@ class UserInformationError(HiveOpenidException):
         :param message: The message to be printed.
         """
 
-        HiveOpenidException.__init__(self)
+        HiveOpenIDException.__init__(self)
         self.message = message
 
     def __str__(self):

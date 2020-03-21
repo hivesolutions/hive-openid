@@ -1,16 +1,16 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Hive Solutions Openid
+# Hive Solutions OpenID
 # Copyright (c) 2008-2020 Hive Solutions Lda.
 #
-# This file is part of Hive Solutions Openid.
+# This file is part of Hive Solutions OpenID.
 #
-# Hive Solutions Openid is confidential and property of Hive Solutions Lda.,
+# Hive Solutions OpenID is confidential and property of Hive Solutions Lda.,
 # its usage is constrained by the terms of the Hive Solutions
 # Confidential Usage License.
 #
-# Hive Solutions Openid should not be distributed under any circumstances,
+# Hive Solutions OpenID should not be distributed under any circumstances,
 # violation of this may imply legal action.
 #
 # If you have any questions regarding the terms of this license please
@@ -36,14 +36,14 @@ __license__ = "Hive Solutions Confidential Usage License (HSCUL)"
 
 import colony
 
-class HiveOpenidPlugin(colony.Plugin):
+class HiveOpenIDPlugin(colony.Plugin):
     """
-    The main class for the Hive Openid Main plugin.
+    The main class for the Hive OpenID Main plugin.
     """
 
     id = "pt.hive.cronus.plugins.hive_openid"
-    name = "Hive Openid"
-    description = "The plugin that offers the hive openid provider"
+    name = "Hive OpenID"
+    description = "The plugin that offers the Hive OpenID provider"
     version = "1.0.0"
     author = "Hive Solutions Lda. <development@hive.pt>"
     platforms = [
@@ -65,7 +65,7 @@ class HiveOpenidPlugin(colony.Plugin):
     def load_plugin(self):
         colony.Plugin.load_plugin(self)
         import hive_openid
-        self.system = hive_openid.HiveOpenid(self)
+        self.system = hive_openid.HiveOpenID(self)
 
     def end_load_plugin(self):
         colony.Plugin.end_load_plugin(self)
