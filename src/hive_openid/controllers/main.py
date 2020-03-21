@@ -316,7 +316,7 @@ class MainController(BaseController):
         return user_information
 
     def process_associate(self, request, openid_data):
-        # retrieves the api openid plugin using it in the generation
+        # retrieves the API openid plugin using it in the generation
         # of the service instance for the current auth workflow
         api_openid_plugin = self.plugin.api_openid_plugin
         openid_server = api_openid_plugin.create_server({})
@@ -392,7 +392,7 @@ class MainController(BaseController):
         # otherwise a new openid server should be created
         # for the stateless mode
         else:
-            # retrieves the api openid plugin and creates a new
+            # retrieves the API openid plugin and creates a new
             # server instance using this same plugin
             api_openid_plugin = self.plugin.api_openid_plugin
             openid_server = api_openid_plugin.create_server({})
