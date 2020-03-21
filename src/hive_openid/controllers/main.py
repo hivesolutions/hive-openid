@@ -240,7 +240,7 @@ class MainController(BaseController):
 
         # retrieves the openid structure from the session attribute
         # an in case it's defined runs the redirection to the
-        # the defined return url (external url), note that the open
+        # the defined return URL (external URL), note that the open
         # id server instance must be re-created for such usage
         openid_structure = request.get_s("openid_structure")
         if openid_structure:
@@ -321,7 +321,7 @@ class MainController(BaseController):
         api_openid_plugin = self.plugin.api_openid_plugin
         openid_server = api_openid_plugin.create_server({})
 
-        # retrieves the provider url associated with the current
+        # retrieves the provider URL associated with the current
         # request (to be used in the structure creation)
         provider_url = self._get_provider_url(request)
 
@@ -397,7 +397,7 @@ class MainController(BaseController):
             api_openid_plugin = self.plugin.api_openid_plugin
             openid_server = api_openid_plugin.create_server({})
 
-            # retrieves the provider url and
+            # retrieves the provider URL and
             provider_url = self._get_provider_url(request)
             openid_server.generate_openid_structure(provider_url)
 
@@ -489,7 +489,7 @@ class MainController(BaseController):
         self.set_contents(request, data, "text/plain")
 
     def _get_provider_url(self, request):
-        # retrieves the host path for the server path as the provider url
+        # retrieves the host path for the server path as the provider URL
         # and returns it to the caller method to be used
         provider_url = self._get_host_path(request, "/server")
         return provider_url
